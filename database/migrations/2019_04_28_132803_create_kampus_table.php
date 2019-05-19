@@ -14,15 +14,13 @@ class CreateKampusTable extends Migration
     public function up()
     {
         Schema::create('kampus', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('nama_kampus', 200)->unique();
             $table->string('kode_kampus', 220)->unique();
-            $table->integer('image_id')->nullable()->unsigned();
+            $table->unsignedBigInteger('image_id')->nullable();
             $table->text('deskripsi')->nullable();
             $table->timestamps();
             $table->index('kode_kampus');
-            $table->foreign('image')->references('id')
-                ->on('images');
         });
     }
 

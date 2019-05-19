@@ -14,7 +14,7 @@ class CreateProdiTable extends Migration
     public function up()
     {
         Schema::create('prodi', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('nama_prodi', 150)->unique();
             $table->string('kode_prodi', 15)->unique();
             $table->text('deskripsi')->nullable();

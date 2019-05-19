@@ -22,8 +22,7 @@ class CreateJurusanTable extends Migration
             $table->timestamps();
             $table->index('nama_jurusan');
             $table->index('kode_jurusan');
-            $table->foreign('kampus_prodi_id')->references('id')
-                ->on('kampus_prodi_many');
+            $table->foreign('kampus_prodi_id')->references('id')->on('kampus_prodi_many');
         });
     }
 
