@@ -18,7 +18,6 @@ class CreateKampusImageTable extends Migration
             $table->unsignedBigInteger('kampus_id');
             $table->unsignedBigInteger('image_id');
             $table->timestamps();
-            $table->primary('id');
             $table->foreign('kampus_id')->references('id')
                 ->on('kampus');
             $table->foreign('image_id')->references('id')

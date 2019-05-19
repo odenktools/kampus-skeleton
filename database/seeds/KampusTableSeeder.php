@@ -22,10 +22,17 @@ class KampusTableSeeder extends Seeder
         $this->model->create([
             'nama_kampus' => 'LPKIA',
             'kode_kampus' => 'lpkia-jaya',
-            'image_id' => 1,
             'alamat' => 'Jalan Soekarno Hatta no. 456',
             'no_telephone' => '022-7564283 / 7564284',
             'deskripsi' => 'Kampus tercinta LPKIA Jaya',
         ])->id;
+
+        DB::table('kampus_image')->insertGetId([
+            'id' => 1,
+            'kampus_id' => 1,
+            'image_id' => 1,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
     }
 }
