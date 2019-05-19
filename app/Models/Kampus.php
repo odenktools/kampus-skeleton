@@ -27,7 +27,7 @@ class Kampus extends Model
      * @var array
      */
     protected $fillable = [
-        'nama_kampus', 'kode_kampus', 'deskripsi',
+        'nama_kampus', 'kode_kampus', 'alamat', 'no_telephone', 'deskripsi'
     ];
 
     /**
@@ -57,6 +57,8 @@ class Kampus extends Model
                 'id',
                 'nama_kampus',
                 'kode_kampus',
+                'no_telephone',
+                'alamat',
                 'deskripsi'
             );
     }
