@@ -53,13 +53,16 @@ class Kampus extends Model
     public function sql()
     {
         return $this
+            ->leftJoin('kampus_image', 'kampus_image.kampus_id', '=', 'kampus.id')
+            ->leftJoin('images', 'images.id', '=', 'kampus_image.image_id')
             ->select(
-                'id',
-                'nama_kampus',
-                'kode_kampus',
-                'no_telephone',
-                'alamat',
-                'deskripsi'
+                'kampus.id',
+                'kampus.nama_kampus',
+                'kampus.kode_kampus',
+                'kampus.no_telephone',
+                'kampus.alamat',
+                'kampus.deskripsi',
+                'images.image_url'
             );
     }
 

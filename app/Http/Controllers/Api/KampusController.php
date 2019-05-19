@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Libraries\ResponseLibrary;
+use App\Models\Kampus;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Libraries\ResponseLibrary;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Models\Kampus;
 
 /**
- * ResponseLibrary untuk mempermudah response API.
+ * Kampus Controller API.
  *
  * @author     Odenktools
  * @license    MIT
@@ -39,7 +41,7 @@ class KampusController extends Controller
             $kode_kampus = strtolower($request->input('kode_kampus'));
             $alamat = strtolower($request->input('alamat'));
             $limit = $request->input('limit') ? $request->input('limit') : 10;
-            $sortBy = $request->input('sort') ? $request->input('sort') : 'updated_at';
+            $sortBy = $request->input('sort') ? $request->input('sort') : 'kampus.updated_at';
             $orderBy = $request->input('order') ? $request->input('order') : 'DESC';
             $conditions = '1 = 1';
 
@@ -48,15 +50,15 @@ class KampusController extends Controller
             }
 
             if (!empty($nama_kampus)) {
-                $conditions .= " AND nama_kampus LIKE '%$nama_kampus%'";
+                $conditions .= " AND kampus.nama_kampus LIKE '%$nama_kampus%'";
             }
 
             if (!empty($kode_kampus)) {
-                $conditions .= " AND kode_kampus = '$kode_kampus'";
+                $conditions .= " AND kampus.kode_kampus = '$kode_kampus'";
             }
 
             if (!empty($alamat)) {
-                $conditions .= " AND alamat LIKE '%$alamat%'";
+                $conditions .= " AND kampus.alamat LIKE '%$alamat%'";
             }
 
             $select = $this->model
@@ -83,7 +85,7 @@ class KampusController extends Controller
                     'results' => $results,
                 ], 200);
             }
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             $code = $e->getCode();
             $message = $e->getMessage();
             return response($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
@@ -121,7 +123,7 @@ class KampusController extends Controller
             $model->alamat = $request->input('alamat');
             $model->deskripsi = $request->input('deskripsi');
             $model->save();
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
@@ -165,7 +167,7 @@ class KampusController extends Controller
             $model->alamat = $request->input('alamat');
             $model->deskripsi = $request->input('deskripsi');
             $model->update();
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
@@ -209,42 +211,38 @@ class KampusController extends Controller
         try {
             if (!empty($request->file('foto_utama'))) {
                 if ($request->file('foto_utama')->isValid()) {
-                    $imageModel = new \App\Models\Image();
+                    $imageModel = new Image();
                     $path = $request->file('foto_utama')->store('images/kampus', 'public');
-                    $uuid = (string)\Webpatser\Uuid\Uuid::generate(4);
-                    $key_id = $imageModel->create(['id' => $uuid, 'image_url' => $path])->id;
+                    $key_id = $imageModel->create(['image_url' => $path])->id;
                     $imageData[$key_id] = array();
                 }
             }
             if (!empty($request->file('foto_1'))) {
                 if ($request->file('foto_1')->isValid()) {
-                    $imageModel = new \App\Models\Image();
+                    $imageModel = new Image();
                     $path = $request->file('foto_1')->store('images/kampus', 'public');
-                    $uuid = (string)\Webpatser\Uuid\Uuid::generate(4);
-                    $key_id = $imageModel->create(['id' => $uuid, 'image_url' => $path])->id;
+                    $key_id = $imageModel->create(['image_url' => $path])->id;
                     $imageData[$key_id] = array();
                 }
             }
             if (!empty($request->file('foto_2'))) {
                 if ($request->file('foto_2')->isValid()) {
-                    $imageModel = new \App\Models\Image();
+                    $imageModel = new Image();
                     $path = $request->file('foto_2')->store('images/kampus', 'public');
-                    $uuid = (string)\Webpatser\Uuid\Uuid::generate(4);
-                    $key_id = $imageModel->create(['id' => $uuid, 'image_url' => $path])->id;
+                    $key_id = $imageModel->create(['image_url' => $path])->id;
                     $imageData[$key_id] = array();
                 }
             }
             if (!empty($request->file('foto_3'))) {
                 if ($request->file('foto_3')->isValid()) {
-                    $imageModel = new \App\Models\Image();
+                    $imageModel = new Image();
                     $path = $request->file('foto_3')->store('images/kampus', 'public');
-                    $uuid = (string)\Webpatser\Uuid\Uuid::generate(4);
-                    $key_id = $imageModel->create(['id' => $uuid, 'image_url' => $path])->id;
+                    $key_id = $imageModel->create(['image_url' => $path])->id;
                     $imageData[$key_id] = array();
                 }
             }
             $data->kampus_images()->sync($imageData);
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
