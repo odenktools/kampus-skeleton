@@ -1,0 +1,20 @@
+version: "3.6"
+
+services:
+
+  kampus:
+    container_name: kampus
+    image: odenktools/php5.6-apache2:latest
+    ports:
+      - "80:80"
+      - "8443:443"
+    volumes:
+      - "/d/htdocs/config/apache2/laravel:/etc/apache2/sites-available"
+      - "/d/htdocs/kampus-skeleton:/var/www/html"
+    networks: ['default']
+
+networks:
+  default:
+    external:
+      name: kampus-net
+#eof
