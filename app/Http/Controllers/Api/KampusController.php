@@ -34,53 +34,63 @@ class KampusController extends Controller
      */
     public function getIndex(Request $request)
     {
-        $nama_kampus = strtolower($request->input('nama_kampus'));
-        $kode_kampus = strtolower($request->input('kode_kampus'));
-        $alamat = strtolower($request->input('alamat'));
-        $limit = $request->input('limit') ? $request->input('limit') : 10;
-        $sortBy = $request->input('sort') ? $request->input('sort') : 'updated_at';
-        $orderBy = $request->input('order') ? $request->input('order') : 'DESC';
-        $conditions = '1 = 1';
+        try {
+            $nama_kampus = strtolower($request->input('nama_kampus'));
+            $kode_kampus = strtolower($request->input('kode_kampus'));
+            $alamat = strtolower($request->input('alamat'));
+            $limit = $request->input('limit') ? $request->input('limit') : 10;
+            $sortBy = $request->input('sort') ? $request->input('sort') : 'updated_at';
+            $orderBy = $request->input('order') ? $request->input('order') : 'DESC';
+            $conditions = '1 = 1';
 
-        if ($limit >= 20) {
-            $limit = 10;
-        }
+            if ($limit >= 20) {
+                $limit = 10;
+            }
 
-        if (!empty($nama_kampus)) {
-            $conditions .= " AND nama_kampus LIKE '%$nama_kampus%'";
-        }
+            if (!empty($nama_kampus)) {
+                $conditions .= " AND nama_kampus LIKE '%$nama_kampus%'";
+            }
 
-        if (!empty($kode_kampus)) {
-            $conditions .= " AND kode_kampus = '$kode_kampus'";
-        }
+            if (!empty($kode_kampus)) {
+                $conditions .= " AND kode_kampus = '$kode_kampus'";
+            }
 
-        if (!empty($alamat)) {
-            $conditions .= " AND alamat LIKE '%$alamat%'";
-        }
+            if (!empty($alamat)) {
+                $conditions .= " AND alamat LIKE '%$alamat%'";
+            }
 
-        $select = $this->model
-            ->sql('*')
-            ->whereRaw($conditions)
-            ->limit($limit)
-            ->orderBy($sortBy, $orderBy);
+            $select = $this->model
+                ->sql('*')
+                ->whereRaw($conditions)
+                ->limit($limit)
+                ->orderBy($sortBy, $orderBy);
 
-        $paging = array();
-        if (!empty($select)) {
-            $paginate = $select->paginate($limit);
-            $paging['total'] = $paginate->total();
-            $paging['per_page'] = $paginate->perPage();
-            $paging['current_page'] = $paginate->currentPage();
-            $paging['last_page'] = $paginate->lastPage();
-            $paging['next_page_url'] = $paginate->nextPageUrl();
-            $paging['prev_page_url'] = $paginate->previousPageUrl();
-            $paging['from'] = $paginate->firstItem(); //(string)\Webpatser\Uuid\Uuid::generate(4);
-            $paging['to'] = $paginate->lastItem();
-            $results = $paginate->items();
-            return response([
-                'meta' => array('code' => 200, 'message' => 'Success'),
-                'pageinfo' => $paging,
-                'results' => $results,
-            ], 200);
+            $paging = array();
+            if (!empty($select)) {
+                $paginate = $select->paginate($limit);
+                $paging['total'] = $paginate->total();
+                $paging['per_page'] = $paginate->perPage();
+                $paging['current_page'] = $paginate->currentPage();
+                $paging['last_page'] = $paginate->lastPage();
+                $paging['next_page_url'] = $paginate->nextPageUrl();
+                $paging['prev_page_url'] = $paginate->previousPageUrl();
+                $paging['from'] = $paginate->firstItem(); //(string)\Webpatser\Uuid\Uuid::generate(4);
+                $paging['to'] = $paginate->lastItem();
+                $results = $paginate->items();
+                return response([
+                    'meta' => array('code' => 200, 'message' => 'Success'),
+                    'pageinfo' => $paging,
+                    'results' => $results,
+                ], 200);
+            }
+        } catch (\Illuminate\Database\QueryException $e) {
+            $code = $e->getCode();
+            $message = $e->getMessage();
+            return response($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+        } catch (\Exception $e) {
+            $code = $e->getCode();
+            $message = $e->getMessage();
+            return response($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
         }
     }
 
