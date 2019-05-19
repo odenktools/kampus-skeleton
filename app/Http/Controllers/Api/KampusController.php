@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Kampus Controller API.
@@ -76,13 +77,17 @@ class KampusController extends Controller
                 $paging['last_page'] = $paginate->lastPage();
                 $paging['next_page_url'] = $paginate->nextPageUrl();
                 $paging['prev_page_url'] = $paginate->previousPageUrl();
-                $paging['from'] = $paginate->firstItem(); //(string)\Webpatser\Uuid\Uuid::generate(4);
+                $paging['from'] = $paginate->firstItem();
                 $paging['to'] = $paginate->lastItem();
-                $results = $paginate->items();
+                $mahasiswa = array();
+                foreach ($select->get() as $idx => $dt) {
+                    $mahasiswa[$idx] = $dt;
+                    $mahasiswa[$idx]['image_url'] = env('APP_URL') . Storage::url($mahasiswa[$idx]['image_url']);
+                }
                 return response([
                     'meta' => array('code' => 200, 'message' => 'Success'),
                     'pageinfo' => $paging,
-                    'results' => $results,
+                    'results' => $mahasiswa,
                 ], 200);
             }
         } catch (QueryException $e) {
