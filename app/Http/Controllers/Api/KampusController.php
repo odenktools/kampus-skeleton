@@ -34,9 +34,9 @@ class KampusController extends Controller
      */
     public function getIndex(Request $request)
     {
-        $nama_kampus = $request->input('nama_kampus');
-        $kode_kampus = $request->input('kode_kampus');
-        $alamat = $request->input('alamat');
+        $nama_kampus = strtolower($request->input('nama_kampus'));
+        $kode_kampus = strtolower($request->input('kode_kampus'));
+        $alamat = strtolower($request->input('alamat'));
         $limit = $request->input('limit') ? $request->input('limit') : 10;
         $sortBy = $request->input('sort') ? $request->input('sort') : 'updated_at';
         $orderBy = $request->input('order') ? $request->input('order') : 'DESC';
@@ -47,7 +47,7 @@ class KampusController extends Controller
         }
 
         if (!empty($nama_kampus)) {
-            $conditions .= " AND nama_kampus ILIKE '%$nama_kampus%'";
+            $conditions .= " AND nama_kampus LIKE '%$nama_kampus%'";
         }
 
         if (!empty($kode_kampus)) {
@@ -55,7 +55,7 @@ class KampusController extends Controller
         }
 
         if (!empty($alamat)) {
-            $conditions .= " AND alamat ILIKE '%$alamat%'";
+            $conditions .= " AND alamat LIKE '%$alamat%'";
         }
 
         $select = $this->model
