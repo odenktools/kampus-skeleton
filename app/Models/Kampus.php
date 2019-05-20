@@ -63,7 +63,7 @@ class Kampus extends Model
                 'kampus.alamat',
                 'kampus.deskripsi',
                 'images.image_url'
-            );
+            )->with('kampus_prodi');
     }
 
     /**
@@ -76,5 +76,17 @@ class Kampus extends Model
         return $this->belongsToMany('App\Models\Image', 'kampus_image',
             'kampus_id', 'image_id', 'id')
             ->using('App\Models\KampusImage');
+    }
+
+    /**
+     * Define a many-to-many relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function kampus_prodi()
+    {
+        return $this->belongsToMany('App\Models\Prodi', 'kampus_prodi_many',
+            'kampus_id', 'prodi_id', 'id')
+            ->using('App\Models\KampusProdiMany');
     }
 }
