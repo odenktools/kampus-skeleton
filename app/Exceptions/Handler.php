@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
 
 class Handler extends ExceptionHandler
 {
@@ -27,7 +28,7 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param  \Exception  $exception
+     * @param  \Exception $exception
      * @return void
      */
     public function report(Exception $exception)
@@ -38,20 +39,53 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Exception $exception
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $exception)
     {
+        $response = [
+            'meta' => [
+                'code' => 400,
+                'message' => (string)$exception->getMessage(),
+                'errors' => [$exception],
+            ],
+            'data' => []
+        ];
+        if (env('APP_DEBUG') == true) {
+            $response['meta']['debug'] = [
+                'exception' => get_class($exception),
+                'trace' => $exception->getTrace()
+            ];
+        }else{
+            $response['meta']['debug'] = [
+                'exception' => null,
+                'trace' => null
+            ];
+        }
+        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
+            $response['meta']['message'] = Response::$statusTexts[$exception->getStatusCode()];
+            $response['meta']['code'] = $exception->getStatusCode();
+            return response()->json($response);
+        } else if ($exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+            $response['meta']['message'] = Response::$statusTexts[Response::HTTP_NOT_FOUND];
+            $response['meta']['code'] = Response::HTTP_NOT_FOUND;
+            return response()->json($response);
+        }
+        if ($request->wantsJson() && !($exception instanceof \Illuminate\Validation\ValidationException)) {
+            $response['meta']['message'] = (string)$exception->getMessage();
+            $response['meta']['code'] = 400;
+            return response()->json($response);
+        }
         return parent::render($request, $exception);
     }
 
     /**
      * Convert an authentication exception into an unauthenticated response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Auth\AuthenticationException  $exception
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Auth\AuthenticationException $exception
      * @return \Illuminate\Http\Response
      */
     protected function unauthenticated($request, AuthenticationException $exception)
@@ -63,3 +97,4 @@ class Handler extends ExceptionHandler
         return redirect()->guest(route('login'));
     }
 }
+

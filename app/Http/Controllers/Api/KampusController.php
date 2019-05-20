@@ -154,7 +154,7 @@ class KampusController extends Controller
     public function putUpdate(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id' => 'required|string|max:255',
+            'id' => 'required|int',
             'nama_kampus' => 'required|unique:kampus,nama_kampus,' . $request->input('id') . '|max:255',
             'alamat' => 'required',
             'no_telephone' => 'required',

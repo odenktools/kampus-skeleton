@@ -27,4 +27,6 @@ Route::group(['as' => 'api::', 'namespace' => 'Api', 'prefix' => 'v1'], function
 
     // Berita Routes, digunakan untuk response yang sangat simple, dan simple crud
     Route::get('berita', ['as' => 'berita.index', 'uses' => 'BeritaController@getIndex']);
+    Route::post('berita/insert', ['as' => 'berita.insert', 'uses' => 'BeritaController@postInsert']);
+    Route::post('berita/update/{id}', ['as' => 'berita.update', 'uses' => 'BeritaController@postUpdate']);
 });
