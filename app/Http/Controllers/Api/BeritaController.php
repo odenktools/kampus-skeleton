@@ -65,7 +65,7 @@ class BeritaController extends Controller
                     $berita[$idx]['image_url'] = env('APP_URL') . Storage::url($berita[$idx]['image_url']);
                 }
             }
-            return response(['berita'=>$berita], 200);
+            return response()->json(['berita'=>$berita], 200);
         } catch (QueryException $e) {
             $code = $e->getCode();
             $message = $e->getMessage();

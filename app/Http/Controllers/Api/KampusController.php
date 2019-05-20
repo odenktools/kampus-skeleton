@@ -84,7 +84,7 @@ class KampusController extends Controller
                     $mahasiswa[$idx] = $dt;
                     $mahasiswa[$idx]['image_url'] = env('APP_URL') . Storage::url($mahasiswa[$idx]['image_url']);
                 }
-                return response([
+                return response()->json([
                     'meta' => array('code' => 200, 'message' => 'Success'),
                     'pageinfo' => $paging,
                     'results' => $mahasiswa,
@@ -93,11 +93,11 @@ class KampusController extends Controller
         } catch (QueryException $e) {
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            return response()->json($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
         } catch (\Exception $e) {
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            return response()->json($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
         }
     }
 
@@ -132,16 +132,16 @@ class KampusController extends Controller
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            return response()->json($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+
         } catch (\Exception $e) {
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            return response()->json($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
         }
-
         DB::commit();
-        return response($this->responseLib->createResponse(200, array('success')), 200);
+        return response()->json($this->responseLib->createResponse(200, array('success')), 200);
     }
 
     /**
