@@ -41,7 +41,7 @@ class BeritaController extends Controller
             $judul_berita = strtolower($request->input('judul_berita'));
             $tipe_berita = strtolower($request->input('tipe_berita'));
             $limit = $request->input('limit') ? $request->input('limit') : 10;
-            $sortBy = $request->input('sort') ? $request->input('sort') : 'updated_at';
+            $sortBy = $request->input('sort') ? $request->input('sort') : 'berita.post_date';
             $orderBy = $request->input('order') ? $request->input('order') : 'DESC';
             $conditions = '1 = 1';
             if ($limit >= 20) {
@@ -62,9 +62,10 @@ class BeritaController extends Controller
             if (!empty($select)) {
                 foreach ($select->get() as $idx => $dt) {
                     $berita[$idx] = $dt;
+                    $berita[$idx]['image_url'] = env('APP_URL') . Storage::url($berita[$idx]['image_url']);
                 }
             }
-            return response($berita, 200);
+            return response(['berita'=>$berita], 200);
         } catch (QueryException $e) {
             $code = $e->getCode();
             $message = $e->getMessage();

@@ -19,7 +19,7 @@ class Berita extends Model
      *
      * @var string
      */
-    protected $table = 'jurusan';
+    protected $table = 'berita';
 
     /**
      * The attributes that are mass assignable.
@@ -31,11 +31,22 @@ class Berita extends Model
     ];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'thumbnail',
+    ];
+
+    /**
      * The primary key for the model.
      *
      * @var string
      */
     protected $primaryKey = 'id';
+
+    protected $casts = ['is_active' => 'boolean'];
 
     /**
      * @param array $attributes
@@ -53,14 +64,15 @@ class Berita extends Model
     public function sql()
     {
         return $this
+            ->leftJoin('images', 'images.id', '=', 'berita.thumbnail')
             ->select(
                 'judul_berita',
                 'tipe_berita',
                 'isi_berita',
-                'thumbnail',
+                'images.image_url',
                 'post_date',
-                'is_active',
-            )->with('images');
+                'is_active'
+            );
     }
 
     public function images()

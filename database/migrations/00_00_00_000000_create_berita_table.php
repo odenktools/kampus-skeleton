@@ -22,6 +22,7 @@ class CreateBeritaTable extends Migration
             $table->unsignedBigInteger('thumbnail')->nullable();
             $table->integer('is_active')->default(0);
             $table->index('judul_berita');
+            $table->timestamps();
         });
     }
 
