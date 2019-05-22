@@ -46,7 +46,7 @@ curl --request GET -url http://local.kampus.com/api/v1/berita
 
 ```json
 {
-    "berita": [
+    "results": [
         {
             "judul_berita": "Wow Mahasiswa LPKIA Mendapatkan Juara Olimpiade Teknologi",
             "tipe_berita": "pendidikan",
