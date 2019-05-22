@@ -40,12 +40,26 @@ class Berita extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'post_date'
+    ];
+
+    /**
      * The primary key for the model.
      *
      * @var string
      */
     protected $primaryKey = 'id';
 
+    /**
+     * Casting data type.
+     *
+     * @var array
+     */
     protected $casts = ['is_active' => 'boolean'];
 
     /**
@@ -73,6 +87,18 @@ class Berita extends Model
                 'post_date',
                 'is_active'
             );
+    }
+
+    /**
+     * Convert PostDate to ISO8601.
+     *
+     * @return string
+     */
+    public function getPostDateAttribute()
+    {
+        $date = new \Carbon\Carbon($this->attributes['post_date']);
+        $date->setTimezone('Asia/Jakarta');
+        return $date->toIso8601String();
     }
 
     public function images()

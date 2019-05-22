@@ -67,16 +67,16 @@ class Handler extends ExceptionHandler
         if ($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
             $response['meta']['message'] = Response::$statusTexts[$exception->getStatusCode()];
             $response['meta']['code'] = $exception->getStatusCode();
-            return response()->json($response);
+            return response()->json($response, $exception->getStatusCode());
         } else if ($exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
             $response['meta']['message'] = Response::$statusTexts[Response::HTTP_NOT_FOUND];
             $response['meta']['code'] = Response::HTTP_NOT_FOUND;
-            return response()->json($response);
+            return response()->json($response, $exception->getStatusCode());
         }
         if ($request->wantsJson() && !($exception instanceof \Illuminate\Validation\ValidationException)) {
             $response['meta']['message'] = (string)$exception->getMessage();
             $response['meta']['code'] = 400;
-            return response()->json($response);
+            return response()->json($response, $exception->getStatusCode());
         }
         return parent::render($request, $exception);
     }
