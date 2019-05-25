@@ -14,3 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['as' => 'auth::', 'namespace' => 'Auth'], function () {
+    # Login
+    Route::get('login', ['as' => 'login.get', 'uses' => 'LoginController@showLoginForm']);
+    Route::post('login', ['as' => 'login.post', 'uses' => 'LoginController@login']);
+});

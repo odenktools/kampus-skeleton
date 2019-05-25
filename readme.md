@@ -153,3 +153,32 @@ curl --request POST \
     "data": []
 }
 ```
+
+**Registrasi Kampus**
+
+```bash
+curl --request POST \
+  --url http://local.kampus.com/api/v1/kampus/register \
+  --header 'content-type: multipart/form-data;' \
+  --form nama_kampus=NAMA_KAMPUS_ANDA \
+  --form no_telephone=NO_TELP_KAMUS_ANDA \
+  --form nama_admin=HALLO \
+  --form telephone_admin=08983289838 \
+  --form email_admin=admin@kampusanda.com \
+  --form alamat=ALAMAT_KAMPUS_ANDA \
+  --form deskripsi=DESKRIPSI_KAMPUS_ANDA
+```
+
+# Development
+
+#### Create a new Migration
+
+```bash
+php artisan make:migration create_visitors_table
+```
+
+#### Create a new Seeder
+
+```bash
+php artisan make:seeder UsersTableSeeder
+```

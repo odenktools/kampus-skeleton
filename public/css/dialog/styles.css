@@ -1,0 +1,92 @@
+.good,
+.warn,
+.wrong {
+    font-weight: bold;
+}
+
+.good {
+    color: green;
+}
+
+.warn {
+    color: maroon;
+}
+
+.wrong {
+    color: red;
+}
+
+.gallery-perlukredit {
+    display: inline-block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.list-group.gallery-perlukredit.flex {
+    margin-bottom: 0;
+}
+
+.img-loader {
+    width: 100% !important;
+    height: 171px !important;
+    object-fit: cover;
+}
+
+.modal-body {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.flex {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.flex-list {
+    width: calc(100% / 8);
+    flex-basis: calc(100% / 8);
+    padding: 0 5px;
+    margin-bottom: 15px;
+}
+
+@media screen and (max-width: 1200px) {
+    .flex-list {
+        width: calc(100% / 6);
+        flex-basis: calc(100% / 6);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .flex-list {
+        width: calc(100% / 4);
+        flex-basis: calc(100% / 4);
+    }
+}
+
+.flex-list > a > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.flex-list > a > .text-center {
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#paging-post {
+    height: 490px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.page-paging {
+    text-align: center;
+}

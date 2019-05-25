@@ -20,7 +20,7 @@ class Image extends Model
      *
      * @var string
      */
-    protected $table = 'images';
+    public $table = 'images';
 
     /**
      * The attributes that should be mutated to dates.

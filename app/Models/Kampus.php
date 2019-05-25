@@ -85,7 +85,8 @@ class Kampus extends Model
      */
     public function kampus_prodi()
     {
-        return $this->belongsToMany('App\Models\Prodi', 'kampus_prodi_many',
+        return $this->belongsToMany('App\Models\Prodi',
+            'kampus_prodi_many',
             'kampus_id', 'prodi_id', 'id')
             ->using('App\Models\KampusProdiMany');
     }

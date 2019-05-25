@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\ResponseLibrary;
 use App\Models\Kampus;
 use App\Models\Image;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
@@ -113,6 +114,9 @@ class KampusController extends Controller
         $validator = Validator::make($request->all(), [
             'nama_kampus' => 'required|unique:kampus|max:255',
             'no_telephone' => 'required|unique:kampus|max:150',
+            'nama_admin' => 'required|max:150',
+            'telephone_admin' => 'required|max:15',
+            'email_admin' => 'required|max:255|email|unique:' . 'users' . ',email,NULL,kampus_id,deleted_at,NULL',
             'alamat' => 'required',
             'deskripsi' => 'required|string|max:255'
         ]);
@@ -121,13 +125,25 @@ class KampusController extends Controller
         }
         DB::beginTransaction();
         try {
-            $model = $this->model;
-            $model->nama_kampus = $request->input('nama_kampus');
-            $model->kode_kampus = Str::slug($request->input('nama_kampus'));
-            $model->no_telephone = $request->input('no_telephone');
-            $model->alamat = $request->input('alamat');
-            $model->deskripsi = $request->input('deskripsi');
-            $model->save();
+            $vKampus = $this->model;
+            $vKampus->nama_kampus = $request->input('nama_kampus');
+            $vKampus->kode_kampus = Str::slug($request->input('nama_kampus'));
+            $vKampus->no_telephone = $request->input('no_telephone');
+            $vKampus->alamat = $request->input('alamat');
+            $vKampus->deskripsi = $request->input('deskripsi');
+            $vKampus->save();
+
+            $user = new User();
+            $user->kampus_id = $vKampus->id;
+            $user->name = $request->nama_admin;
+            $user->email = $request->email_admin;
+            $user->phone = $request->telephone_admin;
+            $user->password = bcrypt($request->password);
+            $user->is_active = 1;
+            $user->save();
+
+            $user->user_role()->attach(['role_id' => 1]);
+
         } catch (QueryException $e) {
             DB::rollback();
             $code = $e->getCode();
