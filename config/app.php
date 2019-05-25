@@ -168,6 +168,7 @@ return [
          */
         Laravel\Tinker\TinkerServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        Propaganistas\LaravelPhone\PhoneServiceProvider::class,
 
         /*
          * Application Service Providers...

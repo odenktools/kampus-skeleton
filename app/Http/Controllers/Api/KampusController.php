@@ -115,7 +115,7 @@ class KampusController extends Controller
             'nama_kampus' => 'required|unique:kampus|max:255',
             'no_telephone' => 'required|unique:kampus|max:150',
             'nama_admin' => 'required|max:150',
-            'telephone_admin' => 'required|max:15',
+            'handphone_admin' => 'required|phone:ID,mobile|unique:users,phone,NULL,kampus_id,deleted_at,NULL|max:15',
             'email_admin' => 'required|max:255|email|unique:' . 'users' . ',email,NULL,kampus_id,deleted_at,NULL',
             'alamat' => 'required',
             'deskripsi' => 'required|string|max:255'
@@ -128,7 +128,7 @@ class KampusController extends Controller
             $vKampus = $this->model;
             $vKampus->nama_kampus = $request->input('nama_kampus');
             $vKampus->kode_kampus = Str::slug($request->input('nama_kampus'));
-            $vKampus->no_telephone = $request->input('no_telephone');
+            $vKampus->no_telephone = $request->input('handphone_admin');
             $vKampus->alamat = $request->input('alamat');
             $vKampus->deskripsi = $request->input('deskripsi');
             $vKampus->save();
@@ -137,7 +137,7 @@ class KampusController extends Controller
             $user->kampus_id = $vKampus->id;
             $user->name = $request->nama_admin;
             $user->email = $request->email_admin;
-            $user->phone = $request->telephone_admin;
+            $user->phone = $request->handphone_admin;
             $user->password = bcrypt($request->password);
             $user->is_active = 1;
             $user->save();
