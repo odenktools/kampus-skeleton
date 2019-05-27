@@ -1,3 +1,9 @@
+# Version 0.2.0:
+* - menambahkan table mahasiswa menambahkan table dosen
+* - Menambahkan validasi handphone
+* - Menambahkan halaman login
+* - Perbaiki Exception HTTP Code Set Postdate menjadi format ISO8601
+
 Version 0.1.0
  - ganti root json pada readme.md
  - Ganti SimpleResponse root json menjadi "results" agar mudah menjadi generic
