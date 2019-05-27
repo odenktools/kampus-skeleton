@@ -18,7 +18,11 @@
 </head>
 
 <body class="@yield('body-class')">
-    <div class="wrapper">@yield('wrapper')</div>
+
+    <div class="wrapper">
+        @yield('wrapper')
+    </div>
+
     <script type="text/javascript" src="/{{ config('path.plugins') }}/jquery/jquery-2.2.4.min.js"></script>
     <script type="text/javascript" src="/{{ config('path.plugins') }}/jquery-ui/1.12.1/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/{{ config('path.plugins') }}/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -48,7 +52,6 @@
 
    <script type="text/javascript" src="/{{ config('path.themes.backend') }}/js/app.min.js"></script>
    <script type="text/javascript" src="/{{ config('path.js') }}/scripts.js"></script>
-   <script type="text/javascript" src="/{{ config('path.plugins') }}/elFinder-2.1.48/js/elfinder.full.js"></script>
 
     <script>
         window.base_url = '{!! URL::to("/") !!}/';

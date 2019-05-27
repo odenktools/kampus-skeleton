@@ -165,20 +165,86 @@ curl --request POST \
   --form nama_admin=HALLO \
   --form telephone_admin=08983289838 \
   --form email_admin=admin@kampusanda.com \
+  --form kota=bandung \
   --form alamat=ALAMAT_KAMPUS_ANDA \
   --form deskripsi=DESKRIPSI_KAMPUS_ANDA
 ```
 
+**Error Validasi Nomor Handphone**
+
+```json
+{
+    "meta": {
+        "code": 422,
+        "message": "Error executing request.",
+        "errors": [
+            "The handphone admin field contains an invalid number."
+        ]
+    },
+    "data": []
+}
+```
+
+**Error Duplikat Data**
+
+```json
+{
+    "meta": {
+        "code": 422,
+        "message": "Error executing request.",
+        "errors": [
+            "The nama kampus has already been taken.",
+            "The handphone admin has already been taken.",
+            "The email admin has already been taken."
+        ]
+    },
+    "data": []
+}
+```
+
 # Development
 
-#### Create a new Migration
+#### Membuat Migrasi Baru
 
 ```bash
 php artisan make:migration create_visitors_table
+php artisan make:migration create_dosens_table
+php artisan make:migration create_mahasiswas_table
 ```
 
-#### Create a new Seeder
+#### Membuat Seeder Baru
 
 ```bash
 php artisan make:seeder UsersTableSeeder
 ```
+
+#### Generate AutoComplete untuk PHPStorm
+
+```bash
+php artisan ide-helper:generate
+php artisan ide-helper:meta
+```
+
+# LICENSE
+
+MIT License
+
+Copyright (c) 2019 odenktools
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

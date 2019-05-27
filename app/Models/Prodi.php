@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  * @author     Odenktools
  * @license    MIT
  * @package     \App\Models
- * @copyright  (c) 2019, Odenktools Technology
+ * @copyright  (c) 2019, Odenktools
+ * @link       https://odenktools.com
  */
 class Prodi extends Model
 {

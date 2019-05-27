@@ -5,14 +5,14 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 /**
- * Kampus Migration.
+ * MatakuliahJurusan Migration.
  *
  * @author     Odenktools
  * @license    MIT
  * @copyright  (c) 2019, Odenktools
  * @link       https://odenktools.com
  */
-class CreateKampusTable extends Migration
+class CreateMatakuliahJurusanTable extends Migration
 {
     /**
      * Run the migrations.
@@ -21,16 +21,15 @@ class CreateKampusTable extends Migration
      */
     public function up()
     {
-        Schema::create('kampus', function (Blueprint $table) {
+        Schema::create('matakuliah_jurusan', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nama_kampus', 200)->unique();
-            $table->string('kode_kampus', 220)->unique();
-            $table->string('no_telephone', 150)->unique();
-            $table->string('kota', 255)->comment('bandung,semarang,jakarta,yogyakarta,etc');
-            $table->longText('alamat');
-            $table->longText('deskripsi')->nullable();
+            $table->unsignedBigInteger('matakuliah_id');
+            $table->unsignedBigInteger('jurusan_id');
             $table->timestamps();
-            $table->index('kode_kampus');
+            $table->foreign('matakuliah_id')->references('id')
+                ->on('matakuliah');
+            $table->foreign('jurusan_id')->references('id')
+                ->on('jurusan');
         });
     }
 
@@ -41,6 +40,6 @@ class CreateKampusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kampus');
+        Schema::dropIfExists('matakuliah_jurusan');
     }
 }

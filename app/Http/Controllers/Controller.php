@@ -10,4 +10,14 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    /**
+     * @var \Illuminate\Database\Eloquent\Model
+     */
+    protected $model;
+
+    /**
+     * @var \App\Libraries\ResponseLibrary
+     */
+    protected $responseLib;
 }

@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Storage;
  * @author     Odenktools
  * @license    MIT
  * @package     \App\Models
- * @copyright  (c) 2019, Odenktools Technology
+ * @copyright  (c) 2019, Odenktools
+ * @link       https://odenktools.com
  */
 class Image extends Model
 {

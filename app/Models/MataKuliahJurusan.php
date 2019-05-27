@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * KampusProdiMany Model.
+ * MataKuliahJurusan Model.
  *
  * @author     Odenktools
  * @license    MIT
@@ -13,14 +13,14 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @copyright  (c) 2019, Odenktools
  * @link       https://odenktools.com
  */
-class KampusProdiMany extends Pivot
+class MataKuliahJurusan extends Pivot
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'kampus_prodi_many';
+    protected $table = 'matakuliah_jurusan';
 
     /**
      * The primary key for the model.

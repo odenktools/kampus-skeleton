@@ -24,6 +24,7 @@ class KampusTableSeeder extends Seeder
             'kode_kampus' => 'lpkia-jaya',
             'alamat' => 'Jalan Soekarno Hatta no. 456',
             'no_telephone' => '022-7564283 / 7564284',
+            'kota' => 'Bandung',
             'deskripsi' => 'Kampus tercinta LPKIA Jaya',
         ])->id;
 

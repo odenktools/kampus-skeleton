@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  * @author     Odenktools
  * @license    MIT
  * @package     \App\Models
- * @copyright  (c) 2019, Odenktools Technology
+ * @copyright  (c) 2019, Odenktools
+ * @link       https://odenktools.com
  */
 class Matakuliah extends Model
 {
@@ -27,7 +28,7 @@ class Matakuliah extends Model
      * @var array
      */
     protected $fillable = [
-        'nama_matakuliah', 'kode_matakuliah', 'deskripsi',
+        'nama_matakuliah', 'kode_matakuliah', 'sks', 'semester', 'deskripsi',
     ];
 
     /**
@@ -56,7 +57,22 @@ class Matakuliah extends Model
             ->select(
                 'nama_matakuliah',
                 'kode_matakuliah',
+                'sks',
+                'semester',
                 'deskripsi'
             );
+    }
+
+    /**
+     * Define a many-to-many relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function jurusan()
+    {
+        return $this->belongsToMany('App\Models\Jurusan',
+            'matakuliah_jurusan',
+            'matakuliah_id', 'jurusan_id', 'id')
+            ->using('App\Models\MataKuliahJurusan');
     }
 }

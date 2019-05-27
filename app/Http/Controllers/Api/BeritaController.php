@@ -14,12 +14,13 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * BeritaController Controller API, dipergunakan untuk belajar mapping API Response yang sederhana.
+ * Kampus Controller API, dipergunakan untuk belajar mapping API Response yang sederhana.
  *
  * @author     Odenktools
  * @license    MIT
- * @package     \App\Models
- * @copyright  (c) 2019, Odenktools Technology
+ * @package     \App\Http\Controllers\Api
+ * @copyright  (c) 2019, Odenktools
+ * @link       https://odenktools.com
  */
 class BeritaController extends Controller
 {
@@ -31,6 +32,9 @@ class BeritaController extends Controller
      */
     private $imageModel;
 
+    /**
+     * BeritaController constructor.
+     */
     public function __construct()
     {
         $this->model = new Berita();

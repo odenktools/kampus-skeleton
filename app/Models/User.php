@@ -8,6 +8,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * User Model.
+ *
+ * @author     Odenktools
+ * @license    MIT
+ * @package     \App\Models
+ * @copyright  (c) 2019, Odenktools
+ * @link       https://odenktools.com
+ */
 class User extends Authenticatable
 {
     use Notifiable, SoftDeletes;

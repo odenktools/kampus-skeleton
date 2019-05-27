@@ -19,11 +19,15 @@ use Illuminate\Support\Facades\Storage;
  *
  * @author     Odenktools
  * @license    MIT
- * @package     \App\Models
- * @copyright  (c) 2019, Odenktools Technology
+ * @package     \App\Http\Controllers\Api
+ * @copyright  (c) 2019, Odenktools
+ * @link       https://odenktools.com
  */
 class KampusController extends Controller
 {
+    /**
+     * KampusController constructor.
+     */
     public function __construct()
     {
         $this->model = new Kampus();
@@ -42,6 +46,7 @@ class KampusController extends Controller
             $nama_kampus = strtolower($request->input('nama_kampus'));
             $kode_kampus = strtolower($request->input('kode_kampus'));
             $alamat = strtolower($request->input('alamat'));
+            $kota = strtolower($request->input('kota'));
             $limit = $request->input('limit') ? $request->input('limit') : 10;
             $sortBy = $request->input('sort') ? $request->input('sort') : 'kampus.updated_at';
             $orderBy = $request->input('order') ? $request->input('order') : 'DESC';
@@ -61,6 +66,10 @@ class KampusController extends Controller
 
             if (!empty($alamat)) {
                 $conditions .= " AND kampus.alamat LIKE '%$alamat%'";
+            }
+
+            if (!empty($kota)) {
+                $conditions .= " AND kampus.kota LIKE '%$kota%'";
             }
 
             $select = $this->model
@@ -117,6 +126,7 @@ class KampusController extends Controller
             'nama_admin' => 'required|max:150',
             'handphone_admin' => 'required|phone:ID,mobile|unique:users,phone,NULL,kampus_id,deleted_at,NULL|max:15',
             'email_admin' => 'required|max:255|email|unique:' . 'users' . ',email,NULL,kampus_id,deleted_at,NULL',
+            'kota' => 'required|max:255',
             'alamat' => 'required',
             'deskripsi' => 'required|string|max:255'
         ]);
@@ -129,6 +139,7 @@ class KampusController extends Controller
             $vKampus->nama_kampus = $request->input('nama_kampus');
             $vKampus->kode_kampus = Str::slug($request->input('nama_kampus'));
             $vKampus->no_telephone = $request->input('handphone_admin');
+            $vKampus->kota = $request->input('kota');
             $vKampus->alamat = $request->input('alamat');
             $vKampus->deskripsi = $request->input('deskripsi');
             $vKampus->save();

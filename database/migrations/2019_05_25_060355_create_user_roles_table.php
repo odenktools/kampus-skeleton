@@ -4,6 +4,14 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * UserRole Migration.
+ *
+ * @author     Odenktools
+ * @license    MIT
+ * @copyright  (c) 2019, Odenktools
+ * @link       https://odenktools.com
+ */
 class CreateUserRolesTable extends Migration
 {
     /**
