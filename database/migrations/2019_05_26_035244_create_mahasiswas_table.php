@@ -30,6 +30,11 @@ class CreateMahasiswasTable extends Migration
             $table->string('jenis_kelamin', 10)->comment('laki-laki,perempuan');
             $table->string('phone', 15)->unique();
             $table->string('email', 150)->unique();
+            $table->string('password');
+            $table->string('api_token', 80)
+                ->unique()
+                ->nullable()
+                ->default(null)->comment('token untuk access mobile api');
             $table->string('golongan_darah', 3)->comment('A,B,AB,O');
             $table->string('tempat_lahir', 255)->nullable();
             $table->date('tanggal_lahir')->nullable();

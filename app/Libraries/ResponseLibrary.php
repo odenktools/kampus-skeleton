@@ -24,12 +24,12 @@ class ResponseLibrary
         return $return;
     }
 
-    public function createResponse($code, $data, $message = null)
+    public function createResponse($code, array $data = [], $message = null)
     {
         $return = [];
         $return['meta']['code'] = $code;
         $return['meta']['message'] = $message === null ? trans('message.api.success') : $message;
-        $return['data'] = $data;
+        $return['results'][] = $data;
         return $return;
     }
 
@@ -51,7 +51,6 @@ class ResponseLibrary
         $return['data'] = [];
         return $return;
     }
-
 
     public function validationFailResponse($errors)
     {

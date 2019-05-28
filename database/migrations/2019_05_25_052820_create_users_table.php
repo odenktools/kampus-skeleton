@@ -28,6 +28,10 @@ class CreateUsersTable extends Migration
             $table->string('email', 150)->unique()->index();
             $table->string('phone')->unique()->index();
             $table->string('password');
+            $table->string('api_token', 80)
+                ->unique()
+                ->nullable()
+                ->default(null)->comment('token untuk access mobile api');
             $table->unsignedBigInteger('avatar')->nullable();
             $table->integer('is_active')->default(1)->comment('0 = Not Active, 1 = Active');
             $table->rememberToken();

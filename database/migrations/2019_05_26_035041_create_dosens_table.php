@@ -29,6 +29,11 @@ class CreateDosensTable extends Migration
             $table->string('jenis_kelamin', 10)->comment('laki-laki,perempuan');
             $table->string('email', 150)->unique();
             $table->string('phone', 15)->unique();
+            $table->string('password');
+            $table->string('api_token', 80)
+                ->unique()
+                ->nullable()
+                ->default(null)->comment('token untuk access mobile api');
             $table->unsignedBigInteger('avatar')->nullable();
             $table->string('status_dosen', 50)->comment('tetap,luarbiasa');
             $table->text('alamat')->nullable();

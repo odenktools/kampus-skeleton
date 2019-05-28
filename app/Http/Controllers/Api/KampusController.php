@@ -95,9 +95,17 @@ class KampusController extends Controller
                     $mahasiswa[$idx]['image_url'] = env('APP_URL') . Storage::url($mahasiswa[$idx]['image_url']);
                 }
                 return response()->json([
-                    'meta' => array('code' => 200, 'message' => 'Success'),
+                    'meta' => array(
+                        'code' => 200,
+                        'api_version' => '1.0',
+                        'method' => 'GET',
+                        'message' => 'Success'
+                    ),
                     'pageinfo' => $paging,
-                    'results' => $mahasiswa,
+                    'data' => array(
+                        'message' => 'Success',
+                        'items' => $mahasiswa
+                    ),
                 ], 200);
             }
         } catch (QueryException $e) {
@@ -123,7 +131,7 @@ class KampusController extends Controller
         $validator = Validator::make($request->all(), [
             'nama_kampus' => 'required|unique:kampus|max:255',
             'no_telephone' => 'required|unique:kampus|max:150',
-            'nama_admin' => 'required|max:150',
+            'nama_admin' => 'required|unique:users,name,NULL,kampus_id,deleted_at,NULL|max:150',
             'handphone_admin' => 'required|phone:ID,mobile|unique:users,phone,NULL,kampus_id,deleted_at,NULL|max:15',
             'email_admin' => 'required|max:255|email|unique:' . 'users' . ',email,NULL,kampus_id,deleted_at,NULL',
             'kota' => 'required|max:255',
@@ -144,6 +152,7 @@ class KampusController extends Controller
             $vKampus->deskripsi = $request->input('deskripsi');
             $vKampus->save();
 
+            $apikey = \App\Libraries\StringHelpers::random();
             $user = new User();
             $user->kampus_id = $vKampus->id;
             $user->name = $request->nama_admin;
@@ -151,6 +160,8 @@ class KampusController extends Controller
             $user->phone = $request->handphone_admin;
             $user->password = bcrypt($request->password);
             $user->is_active = 1;
+            $user->api_token = $apikey;
+            $user->avatar = null;
             $user->save();
 
             $user->user_role()->attach(['role_id' => 1]);
@@ -168,7 +179,20 @@ class KampusController extends Controller
             return response()->json($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
         }
         DB::commit();
-        return response()->json($this->responseLib->createResponse(200, array('success')), 200);
+        return response()->json([
+            'meta' => array(
+                'code' => 200,
+                'api_version' => '1.0',
+                'method' => 'POST',
+                'message' => 'Success'
+            ),
+            'errors' => array(),
+            'pageinfo' => (object)[],
+            'data' => array(
+                'message' => "apikey is $apikey",
+                'items' => array($vKampus)
+            ),
+        ], 200);
     }
 
     /**
