@@ -38,7 +38,6 @@ class BeritaController extends Controller
     {
         $this->model = new Berita();
         $this->imageModel = new Image();
-        $this->responseLib = new ResponseLibrary();
     }
 
     /**

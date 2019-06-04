@@ -52,11 +52,45 @@ class Kampus extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'created_at',
+        'updated_at'
+    ];
+
+    /**
      * @param array $attributes
      */
     public function __construct(array $attributes = array())
     {
         parent::__construct($attributes);
+    }
+
+    /**
+     * Convert PostDate to ISO8601.
+     *
+     * @return string
+     */
+    public function getCreatedAtAttribute()
+    {
+        $date = new \Carbon\Carbon($this->attributes['created_at']);
+        $date->setTimezone('Asia/Jakarta');
+        return $date->toIso8601String();
+    }
+
+    /**
+     * Convert PostDate to ISO8601.
+     *
+     * @return string
+     */
+    public function getUpdatedAtAttribute()
+    {
+        $date = new \Carbon\Carbon($this->attributes['updated_at']);
+        $date->setTimezone('Asia/Jakarta');
+        return $date->toIso8601String();
     }
 
     /**
@@ -76,7 +110,9 @@ class Kampus extends Model
                 'kampus.no_telephone',
                 'kampus.alamat',
                 'kampus.deskripsi',
-                'images.image_url'
+                'images.image_url',
+                'kampus.created_at',
+                'kampus.updated_at'
             )->with('kampus_prodi');
     }
 
