@@ -1,3 +1,8 @@
+# Version 0.3.0:
+* - Remove percobaan pada routes/web.php
+* - - Konsistensi Response - Menambahkan "EventDriven" saat menyimpan data kampus - Menambahkan Emailing system - Remove softdelete pada user dan role - Menambahkan validasi email (email hanya support gmail.com, yahoo.com, hotmail.com)
+* - Refactor some code
+
 # Version 0.2.0:
 * - menambahkan table mahasiswa menambahkan table dosen
 * - Menambahkan validasi handphone
