@@ -12,8 +12,7 @@
 */
 
 Route::get('/', function () {
-    echo \App\Libraries\StringHelpers::random();
-    //return view('welcome');
+    return view('welcome');
 });
 
 Route::group(['as' => 'auth::', 'namespace' => 'Auth'], function () {
