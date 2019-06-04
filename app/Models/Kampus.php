@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use App\Events\KampusSaved;
 
 /**
  * Kampus Model.
@@ -15,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Kampus extends Model
 {
+    use Notifiable;
+
     /**
      * The database table used by the model.
      *
@@ -28,7 +32,7 @@ class Kampus extends Model
      * @var array
      */
     protected $fillable = [
-        'nama_kampus', 'kode_kampus', 'alamat', 'no_telephone', 'kota' ,'deskripsi'
+        'nama_kampus', 'kode_kampus', 'alamat', 'no_telephone', 'kota', 'deskripsi'
     ];
 
     /**
@@ -37,6 +41,15 @@ class Kampus extends Model
      * @var string
      */
     protected $primaryKey = 'id';
+
+    /**
+     * The event map for the model. Buat class App\Events\KampusSaved
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'created' => KampusSaved::class,
+    ];
 
     /**
      * @param array $attributes
@@ -90,5 +103,20 @@ class Kampus extends Model
             'kampus_prodi_many',
             'kampus_id', 'prodi_id', 'id')
             ->using('App\Models\KampusProdiMany');
+    }
+
+    /**
+     * Ambil data users pada kampus.
+     * <code>
+     * $kampus = Kampus::find(1);
+     * foreach ($kampus->users as $user) {
+     * $user->user_role()->detach();
+     * $user->delete();
+     * }
+     * </code>
+     */
+    public function users()
+    {
+        return $this->hasMany(\App\Models\User::class, 'kampus_id', 'id');
     }
 }

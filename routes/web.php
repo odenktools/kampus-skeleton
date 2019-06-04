@@ -12,11 +12,12 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    echo \App\Libraries\StringHelpers::random();
+    //return view('welcome');
 });
 
 Route::group(['as' => 'auth::', 'namespace' => 'Auth'], function () {
     # Login
-    Route::get('login', ['as' => 'login.get', 'uses' => 'LoginController@showLoginForm']);
-    Route::post('login', ['as' => 'login.post', 'uses' => 'LoginController@login']);
+    Route::get('login', ['as' => 'login', 'uses' => 'LoginController@showLoginForm']);
+    Route::post('login', ['as' => 'login', 'uses' => 'LoginController@login']);
 });

@@ -25,13 +25,15 @@ use Illuminate\Support\Facades\Storage;
  */
 class KampusController extends Controller
 {
+    protected $configuration = [];
+
     /**
      * KampusController constructor.
      */
     public function __construct()
     {
         $this->model = new Kampus();
-        $this->responseLib = new ResponseLibrary();
+        $this->configuration['email_sender'] = env('APP_EMAIL_SENDER') ? env('APP_EMAIL_SENDER') : false;
     }
 
     /**
@@ -43,6 +45,7 @@ class KampusController extends Controller
     public function getIndex(Request $request)
     {
         try {
+
             $nama_kampus = strtolower($request->input('nama_kampus'));
             $kode_kampus = strtolower($request->input('kode_kampus'));
             $alamat = strtolower($request->input('alamat'));
@@ -89,33 +92,24 @@ class KampusController extends Controller
                 $paging['prev_page_url'] = $paginate->previousPageUrl();
                 $paging['from'] = $paginate->firstItem();
                 $paging['to'] = $paginate->lastItem();
-                $mahasiswa = array();
+                $kampusList = array();
                 foreach ($select->get() as $idx => $dt) {
-                    $mahasiswa[$idx] = $dt;
-                    $mahasiswa[$idx]['image_url'] = env('APP_URL') . Storage::url($mahasiswa[$idx]['image_url']);
+                    $kampusList[$idx] = $dt;
+                    $kampusList[$idx]['image_url'] = env('APP_URL') . Storage::url($kampusList[$idx]['image_url']);
                 }
-                return response()->json([
-                    'meta' => array(
-                        'code' => 200,
-                        'api_version' => '1.0',
-                        'method' => 'GET',
-                        'message' => 'Success'
-                    ),
-                    'pageinfo' => $paging,
-                    'data' => array(
-                        'message' => 'Success',
-                        'items' => $mahasiswa
-                    ),
-                ], 200);
+                return response()->json(ResponseLibrary::paginate($kampusList, $paging), 200);
             }
         } catch (QueryException $e) {
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response()->json($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            //return response()->json(ResponseLibrary::paginate(array(), null), 200);
+            return response()->json(ResponseLibrary::fail($errors, "GET"), 400);
         } catch (\Exception $e) {
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response()->json($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            return response()->json(ResponseLibrary::fail($errors, "GET"), 400);
         }
     }
 
@@ -131,15 +125,15 @@ class KampusController extends Controller
         $validator = Validator::make($request->all(), [
             'nama_kampus' => 'required|unique:kampus|max:255',
             'no_telephone' => 'required|unique:kampus|max:150',
-            'nama_admin' => 'required|unique:users,name,NULL,kampus_id,deleted_at,NULL|max:150',
-            'handphone_admin' => 'required|phone:ID,mobile|unique:users,phone,NULL,kampus_id,deleted_at,NULL|max:15',
-            'email_admin' => 'required|max:255|email|unique:' . 'users' . ',email,NULL,kampus_id,deleted_at,NULL',
+            'nama_admin' => 'required|unique:users,name,NULL,kampus_id|max:150',
+            'handphone_admin' => 'required|phone:ID,mobile|unique:users,phone,NULL,kampus_id|max:15',
+            'email_admin' => 'required|max:255|email_trust|unique:users,email,kampus_id',
             'kota' => 'required|max:255',
             'alamat' => 'required',
             'deskripsi' => 'required|string|max:255'
         ]);
         if ($validator->fails()) {
-            return response($this->responseLib->validationFailResponse($validator->errors()->all()), 422);
+            return response(ResponseLibrary::validation($validator->errors()->all(), 'POST'), 422);
         }
         DB::beginTransaction();
         try {
@@ -170,29 +164,32 @@ class KampusController extends Controller
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response()->json($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            return response()->json(ResponseLibrary::fail($errors, "POST"), 400);
 
         } catch (\Exception $e) {
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response()->json($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            return response()->json(ResponseLibrary::fail($errors, "POST"), 400);
         }
+
         DB::commit();
-        return response()->json([
-            'meta' => array(
-                'code' => 200,
-                'api_version' => '1.0',
-                'method' => 'POST',
-                'message' => 'Success'
-            ),
-            'errors' => array(),
-            'pageinfo' => (object)[],
-            'data' => array(
-                'message' => "apikey is $apikey",
-                'items' => array($vKampus)
-            ),
-        ], 200);
+
+        $insertedData = array(
+            'id' => $vKampus->id,
+            'nama_kampus' => $vKampus->nama_kampus,
+            'api_token' => $user->api_token,
+            'email' => $user->email,
+            'phone' => $user->phone
+        );
+
+        if ($this->configuration['email_sender']) {
+            event(new \App\Events\KampusSaved($vKampus, $insertedData));
+        }
+
+        return response()->json(ResponseLibrary::ok($vKampus, "your apikey is $apikey"), 200);
     }
 
     /**
@@ -212,7 +209,7 @@ class KampusController extends Controller
             'deskripsi' => 'required|string|max:255'
         ]);
         if ($validator->fails()) {
-            return response($this->responseLib->validationFailResponse($validator->errors()->all()), 422);
+            return response(ResponseLibrary::validation($validator->errors()->all(), 'PUT'), 422);
         }
         DB::beginTransaction();
         try {
@@ -227,13 +224,18 @@ class KampusController extends Controller
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            return response(ResponseLibrary::fail($errors, "PUT"), 400);
         } catch (\Exception $e) {
             DB::rollback();
-            return response($this->responseLib->failResponse(400, array($e->getMessage())), 400);
+            $code = $e->getCode();
+            $message = $e->getMessage();
+            $errors = array("Error kode $code", $message);
+            return response(ResponseLibrary::fail($errors, "PUT"), 400);
         }
         DB::commit();
-        return response($this->responseLib->createResponse(200, array('success')), 200);
+
+        return response()->json(ResponseLibrary::ok($model, "success", 'PUT'), 200);
     }
 
     /**
@@ -253,17 +255,14 @@ class KampusController extends Controller
             'foto_3' => 'image|mimes:jpeg,png,jpg,gif,svg|max:6048',
         ]);
         if ($validator->fails()) {
-            return response($this->responseLib->validationFailResponse($validator->errors()->all()), 422);
+            return response(ResponseLibrary::validation($validator->errors()->all(), 'POST'), 422);
         }
         $data = Kampus::find($request->input('id'));
         if (!$data) {
-            return response($this->responseLib->failResponse(400, array('Data not found')), 400);
+            return response(ResponseLibrary::fail(array('Data not found'), "POST"), 400);
         }
-
         $imageData = array();
-
         DB::beginTransaction();
-
         try {
             if (!empty($request->file('foto_utama'))) {
                 if ($request->file('foto_utama')->isValid()) {
@@ -302,15 +301,18 @@ class KampusController extends Controller
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            return response(ResponseLibrary::fail($errors, "POST"), 400);
         } catch (\Exception $e) {
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            return response(ResponseLibrary::fail($errors, "POST"), 400);
         }
         DB::commit();
-        return response($this->responseLib->createResponse(200, array("Success")), 200);
+
+        return response()->json(ResponseLibrary::ok($data, "success"), 200);
     }
 
     /**
@@ -324,21 +326,26 @@ class KampusController extends Controller
     {
         DB::beginTransaction();
         try {
-            $data = Kampus::find($id);
-            if (!$data) {
-                return response($this->responseLib->failResponse(400, array('Data not found')), 400);
+            $kampus = Kampus::find($id);
+            if (!$kampus) {
+                return response(ResponseLibrary::fail(array('Data not found'), "DELETE"), 400);
             }
-            $data->delete();
+            foreach ($kampus->users as $user) {
+                $user->user_role()->detach();
+                $user->delete();
+            }
+            $kampus->delete();
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            return response(ResponseLibrary::fail($errors, "DELETE"), 400);
         } catch (\Exception $e) {
             DB::rollback();
-            return response($this->responseLib->failResponse(400, array($e->getMessage())), 400);
+            return response(ResponseLibrary::fail(array($e->getMessage()), "DELETE"), 400);
         }
         DB::commit();
-        return response($this->responseLib->createResponse(200, array('success')), 200);
+        return response()->json(ResponseLibrary::ok($kampus, "success", 'DELETE'), 200);
     }
 }

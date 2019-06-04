@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,11 +18,11 @@ use Illuminate\Support\Facades\Storage;
  */
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes;
+    use Notifiable;
 
     public $table = 'users';
 
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates = ['created_at', 'updated_at'];
 
     protected $fillable = ['kampus_id', 'name', 'email', 'phone', 'password', 'avatar', 'is_active'];
 

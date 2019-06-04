@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Storage;
  */
 class BeritaController extends Controller
 {
-
     /**
      * Image Model.
      *
@@ -78,19 +77,21 @@ class BeritaController extends Controller
                     $berita[$idx]['image_url'] = env('APP_URL') . Storage::url($berita[$idx]['image_url']);
                 }
             }
-            return response()->json(['results'=>$berita], 200);
+            return response()->json(['results' => $berita], 200);
         } catch (QueryException $e) {
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            return response(ResponseLibrary::fail($errors, "GET"), 400);
         } catch (\Exception $e) {
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            return response(ResponseLibrary::fail($errors, "GET"), 400);
         }
     }
 
-     /**
+    /**
      * Insert data.
      *
      * @param Request $request
@@ -107,7 +108,7 @@ class BeritaController extends Controller
             'is_active' => 'required|boolean|between:0,1'
         ]);
         if ($validator->fails()) {
-            return response($this->responseLib->validationFailResponse($validator->errors()->all()), 422);
+            return response(ResponseLibrary::validation($validator->errors()->all(), "POST"), 422);
         }
         DB::beginTransaction();
         try {
@@ -124,7 +125,7 @@ class BeritaController extends Controller
                         $model->thumbnail = $key_id;
                     }
                 } else {
-                    $key_id = !empty($request->$key.'_old') ? $request->$key.'_old' : null;
+                    $key_id = !empty($request->$key . '_old') ? $request->$key . '_old' : null;
                     $model->thumbnail = $key_id;
                 }
             }
@@ -134,18 +135,21 @@ class BeritaController extends Controller
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response()->json($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            return response()->json(ResponseLibrary::fail($errors, "POST"), 400);
         } catch (\Exception $e) {
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response()->json($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            return response()->json(ResponseLibrary::fail($errors, "POST"), 400);
         }
         DB::commit();
-        return response()->json($this->responseLib->createResponse(200, array('success')), 200);
+
+        return response()->json(ResponseLibrary::ok($model, 'Success'), 200);
     }
 
-     /**
+    /**
      * Update data.
      *
      * @param Request $request
@@ -162,7 +166,7 @@ class BeritaController extends Controller
             'is_active' => 'required|boolean|between:0,1'
         ]);
         if ($validator->fails()) {
-            return response($this->responseLib->validationFailResponse($validator->errors()->all()), 422);
+            return response(ResponseLibrary::validation($validator->errors()->all(), "POST"), 422);
         }
         DB::beginTransaction();
         try {
@@ -179,7 +183,7 @@ class BeritaController extends Controller
                         $model->thumbnail = $key_id;
                     }
                 } else {
-                    $key_id = !empty($request->$key.'_old') ? $request->$key.'_old' : null;
+                    $key_id = !empty($request->$key . '_old') ? $request->$key . '_old' : null;
                     $model->thumbnail = $key_id;
                 }
             }
@@ -188,14 +192,17 @@ class BeritaController extends Controller
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response()->json($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            return response()->json(ResponseLibrary::fail($errors, "POST"), 400);
         } catch (\Exception $e) {
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
-            return response()->json($this->responseLib->failResponse(400, array("Error kode $code", $message)), 400);
+            $errors = array("Error kode $code", $message);
+            return response()->json(ResponseLibrary::fail($errors, "POST"), 400);
         }
         DB::commit();
-        return response()->json($this->responseLib->createResponse(200, array('success')), 200);
+
+        return response()->json(ResponseLibrary::ok(array($model), 'Success'), 200);
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Role Model.
@@ -16,11 +15,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Role extends Model
 {
-    use SoftDeletes;
-
     public $table = 'roles';
 
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates = ['created_at', 'updated_at'];
 
     protected $fillable = ['name', 'description', 'is_active'];
 
@@ -30,6 +27,14 @@ class Role extends Model
      * @var array
      */
     protected $casts = ['is_active' => 'boolean'];
+
+    /**
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = array())
+    {
+        parent::__construct($attributes);
+    }
 
     public function sql()
     {

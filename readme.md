@@ -202,6 +202,16 @@ curl --request POST \
 }
 ```
 
+```
+DELETE FROM user_roles WHERE user_id = 2;
+DELETE FROM users WHERE id = 2;
+DELETE FROM kampus WHERE id = 2;
+
+ALTER TABLE kampus AUTO_INCREMENT = 1;
+ALTER TABLE user_roles AUTO_INCREMENT = 1;
+ALTER TABLE users AUTO_INCREMENT = 1;
+```
+
 # Development
 
 #### Membuat Migrasi Baru
@@ -223,6 +233,12 @@ php artisan make:seeder UsersTableSeeder
 ```bash
 php artisan ide-helper:generate
 php artisan ide-helper:meta
+```
+
+#### Membuat event baru
+
+```bash
+php artisan event:generate
 ```
 
 # LICENSE

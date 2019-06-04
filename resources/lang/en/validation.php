@@ -116,6 +116,7 @@ return [
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
     'phone' => 'The :attribute field contains an invalid number.',
+    'email_trust' => ':attribute only support (*@gmail.com, *@yahoo.com, *@hotmail.com).',
 
     /*
     |--------------------------------------------------------------------------

@@ -14,66 +14,110 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class ResponseLibrary
 {
-    private $errorMessages = null;
+    public static $apiVersion = "1.0";
 
-    public function successResponse()
+    /**
+     * @param array $items
+     * @param string $messages
+     * @param string $method
+     * @return array
+     */
+    public static function ok($items, $messages, $method = 'POST')
     {
         $return = [];
-        $return['meta']['code'] = 200;
+        $return['meta']['code'] = JsonResponse::HTTP_OK;
+        $return['meta']['api_version'] = self::$apiVersion;
+        $return['meta']['method'] = $method;
         $return['meta']['message'] = trans('message.api.success');
+        $return['errors'] = array();
+        $return['pageinfo'] = (object)[];
+        $return['data']['message'] = $messages;
+
+        if ($items instanceof \Illuminate\Database\Eloquent\Model) {
+            $return['data']['items'] = array(new \Illuminate\Database\Eloquent\Collection($items));
+        } else if (is_array($items)) {
+            $return['data']['items'] = $items;
+        } else {
+            $return['data']['items'] = array($items);
+        }
         return $return;
     }
 
-    public function createResponse($code, array $data = [], $message = null)
+    /**
+     *
+     * return response()->json(ResponseLibrary::paginate(array(), null,400), 400);
+     *
+     * @param array $items
+     * @param object $pageInfo
+     * @param int $code
+     * @return array
+     */
+    public static function paginate(array $items, array $pageInfo, $code = 200)
     {
         $return = [];
         $return['meta']['code'] = $code;
-        $return['meta']['message'] = $message === null ? trans('message.api.success') : $message;
-        $return['results'][] = $data;
+        $return['meta']['api_version'] = self::$apiVersion;
+        $return['meta']['method'] = 'GET';
+        $return['meta']['message'] = trans('message.api.success');
+        $return['errors'] = array();
+        if (is_array($pageInfo)) {
+            $return['pageinfo'] = $pageInfo;
+        } else if ($pageInfo === null) {
+            $return['pageinfo'] = (object)[];
+        }
+        $return['data']['message'] = 'Success';
+        if (is_array($items)) {
+            $return['data']['items'] = $items;
+        } else {
+            $return['data']['items'] = array($items);
+        }
         return $return;
     }
 
-    public function errorResponse(\Exception $e)
-    {
-        $return = [];
-        $return['meta']['code'] = JsonResponse::HTTP_INTERNAL_SERVER_ERROR;
-        $return['meta']['message'] = trans('message.api.error');
-        $return['meta']['error'] = $e->getMessage();
-        return $return;
-    }
-
-    public function failResponse($code, $errors)
+    /**
+     * @param array $errors
+     * @param string $method
+     * @param int $code
+     * @return array
+     */
+    public static function fail(array $errors, $method, $code = 400)
     {
         $return = [];
         $return['meta']['code'] = $code;
-        $return['meta']['message'] = trans('message.api.error');
-        $return['meta']['errors'] = $errors;
-        $return['data'] = [];
+        $return['meta']['api_version'] = self::$apiVersion;
+        $return['meta']['method'] = $method;
+        $return['meta']['message'] = trans('message.api.error.global');
+        if (is_array($errors)) {
+            $return['meta']['errors'] = $errors;
+        } else {
+            $return['meta']['errors'] = array($errors);
+        }
+        $return['data']['message'] = 'errors';
+        $return['data']['items'] = array();
+
         return $return;
     }
 
-    public function validationFailResponse($errors)
+    /**
+     * @param array $errors
+     * @param string $method
+     * @return array
+     */
+    public static function validation(array $errors, $method)
     {
         $return = [];
         $return['meta']['code'] = 422;
-        $return['meta']['message'] = trans('message.api.error');
-        $return['meta']['errors'] = $errors;
-        $return['data'] = [];
-        return $return;
-    }
+        $return['meta']['api_version'] = self::$apiVersion;
+        $return['meta']['method'] = $method;
+        $return['meta']['message'] = trans('message.api.error.validation');
+        if (is_array($errors)) {
+            $return['meta']['errors'] = $errors;
+        } else {
+            $return['meta']['errors'] = array($errors);
+        }
+        $return['data']['message'] = 'errors';
+        $return['data']['items'] = array();
 
-    public function setErrorMessage($message)
-    {
-        $this->errorMessages = $message;
-        $return = [];
-        $return['meta']['code'] = 400;
-        $return['meta']['message'] = $this->errorMessages;
-        $return['data'] = [];
         return $return;
-    }
-
-    public function getErrorMessage()
-    {
-        return $this->errorMessages;
     }
 }

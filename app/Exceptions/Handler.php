@@ -48,10 +48,15 @@ class Handler extends ExceptionHandler
         $response = [
             'meta' => [
                 'code' => 400,
-                'message' => (string)$exception->getMessage(),
-                'errors' => [$exception],
+                'api_version' => \App\Libraries\ResponseLibrary::$apiVersion,
+                'message' => trans('message.api.error.global'),
+                'method' => $request->server('REQUEST_METHOD'),
             ],
-            'data' => []
+            'errors' => [$exception->getMessage()],
+            'data' => [
+                'message' => (string)$exception->getMessage(),
+                'items' => []
+            ]
         ];
         if (env('APP_DEBUG') == true) {
             $response['meta']['debug'] = [
@@ -65,29 +70,23 @@ class Handler extends ExceptionHandler
             ];
         }
         if ($request->wantsJson() && $exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
-            $response['meta']['message'] = Response::$statusTexts[$exception->getStatusCode()];
             $response['meta']['code'] = $exception->getStatusCode();
             return response()->json($response, $exception->getStatusCode());
         } else if ($request->wantsJson() && $exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
-            $response['meta']['message'] = Response::$statusTexts[Response::HTTP_NOT_FOUND];
             $response['meta']['code'] = Response::HTTP_NOT_FOUND;
             return response()->json($response, Response::HTTP_NOT_FOUND);
         } else if ($request->wantsJson() && $exception instanceof \Illuminate\Auth\Access\AuthorizationException) {
-            $response['meta']['message'] = Response::$statusTexts[Response::HTTP_UNAUTHORIZED];
             $response['meta']['code'] = Response::HTTP_UNAUTHORIZED;
             return response()->json($response, Response::HTTP_UNAUTHORIZED);
         } else if ($request->wantsJson() && $exception instanceof \Illuminate\Auth\AuthenticationException) {
-            $response['meta']['message'] = Response::$statusTexts[Response::HTTP_UNAUTHORIZED];
             $response['meta']['code'] = Response::HTTP_UNAUTHORIZED;
             return response()->json($response, Response::HTTP_UNAUTHORIZED);
-        }else if ($request->wantsJson() && $exception instanceof \Illuminate\Session\TokenMismatchException) {
-            $response['meta']['message'] = Response::$statusTexts[Response::HTTP_UNAUTHORIZED];
+        } else if ($request->wantsJson() && $exception instanceof \Illuminate\Session\TokenMismatchException) {
             $response['meta']['code'] = Response::HTTP_UNAUTHORIZED;
             return response()->json($response, Response::HTTP_UNAUTHORIZED);
         }
 
         if ($request->wantsJson() && !($exception instanceof \Illuminate\Validation\ValidationException)) {
-            $response['meta']['message'] = (string)$exception->getMessage();
             $response['meta']['code'] = 400;
             return response()->json($response, 400);
         }

@@ -40,7 +40,6 @@ class CreateUsersTable extends Migration
             $table->ipAddress('last_logout_ip')->nullable();
             $table->timestamp('last_logout_at')->nullable();
             $table->timestamps();
-            $table->softDeletes();
             $table->foreign('kampus_id')->references('id')->on('kampus');
             $table->foreign('avatar')->references('id')->on('images');
         });

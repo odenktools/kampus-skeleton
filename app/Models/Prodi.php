@@ -39,6 +39,13 @@ class Prodi extends Model
     protected $primaryKey = 'id';
 
     /**
+     * Hidden from fetch column.
+     *
+     * @var array
+     */
+    protected $hidden = ['pivot'];
+
+    /**
      * @param array $attributes
      */
     public function __construct(array $attributes = array())

@@ -28,4 +28,5 @@ class KampusProdiMany extends Pivot
      * @var string
      */
     protected $primaryKey = 'id';
+
 }

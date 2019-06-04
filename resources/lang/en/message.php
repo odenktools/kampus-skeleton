@@ -21,6 +21,9 @@ return [
 
     'api' => [
         'success' => 'Operation successfully executed.',
-        'error' => 'Error executing request.',
+        'error' => [
+            'global' => 'Error executing request.',
+            'validation' => 'Validation error.',
+        ],
     ]
 ];
