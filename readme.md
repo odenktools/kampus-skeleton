@@ -104,30 +104,19 @@ curl --request POST \
 
 ```json
 {
-    "meta": {
-        "code": 200,
-        "api_version": "1.0",
-        "method": "POST",
-        "message": "Success"
-    },
-    "errors": [],
-    "pageinfo": {},
-    "data": {
-        "message": "apikey is zFiA8CBsrhijSGymnHcOa3B7J75XvChW",
-        "items": [
-            {
-                "nama_kampus": "xxx",
-                "kode_kampus": "xxx",
-                "no_telephone": "0896710110",
-                "kota": "bandung",
-                "alamat": "alamat",
-                "deskripsi": "deskripsi",
-                "created_at": "2019-06-04T18:41:40+07:00",
-                "updated_at": "2019-06-04T18:41:40+07:00",
-                "id": 1
-            }
-        ]
-    }
+    "message": "Success",
+    "results": [
+        {
+            "judul_berita": "Rossi Menang di Assen Belanda2",
+            "tipe_berita": "news",
+            "is_active": true,
+            "isi_berita": "Rossi Menang di Assen Belanda yang beruj2ung pada naiknya peringkat kelasemen",
+            "post_date": "2019-06-20T07:00:00+07:00",
+            "updated_at": "2019-06-20T23:02:39+07:00",
+            "created_at": "2019-06-20T23:02:39+07:00",
+            "id": 12
+        }
+    ]
 }
 ```
 
@@ -135,22 +124,10 @@ curl --request POST \
 
 ```json
 {
-    "meta": {
-        "code": 422,
-        "api_version": "1.0",
-        "method": "POST",
-        "message": "Validation error.",
-        "errors": [
-            "The nama kampus has already been taken.",
-            "The nama admin has already been taken.",
-            "The handphone admin has already been taken.",
-            "The email admin has already been taken."
-        ]
-    },
-    "data": {
-        "message": "errors",
-        "items": []
-    }
+    "message": "Error",
+    "results": [
+        "The judul berita has already been taken."
+    ]
 }
 ```
 
@@ -172,29 +149,19 @@ curl --request POST \
 
 ```json
 {
-    "meta": {
-        "code": 200,
-        "api_version": "1.0",
-        "method": "POST",
-        "message": "Operation successfully executed."
-    },
-    "errors": [],
-    "pageinfo": {},
-    "data": {
-        "message": "Success",
-        "items": [
-            {
-                "judul_berita": "Rossi Menang di Assen Belanda",
-                "tipe_berita": "news",
-                "is_active": true,
-                "isi_berita": "Rossi Menang di Assen Belanda yang berujung pada naiknya peringkat kelasemen",
-                "post_date": "2019-06-04T07:00:00+07:00",
-                "updated_at": "2019-06-04T07:00:00+07:00",
-                "created_at": "2019-06-04T07:00:00+07:00",
-                "id": 2
-            }
-        ]
-    }
+    "message": "Success",
+    "results": [
+        {
+            "id": 12,
+            "judul_berita": "Rossi Menang di Assen Belanda3",
+            "tipe_berita": "news",
+            "isi_berita": "Rossi Menang di Assen Belanda yang berujung pada naiknya peringkat kelasemen",
+            "post_date": "2019-06-20T07:00:00+07:00",
+            "is_active": true,
+            "created_at": "2019-06-20T23:02:39+07:00",
+            "updated_at": "2019-06-20T23:05:26+07:00"
+        }
+    ]
 }
 ```
 
@@ -202,19 +169,10 @@ curl --request POST \
 
 ```json
 {
-    "meta": {
-        "code": 422,
-        "api_version": "1.0",
-        "method": "POST",
-        "message": "Validation error.",
-        "errors": [
-            "The is active field is required."
-        ]
-    },
-    "data": {
-        "message": "errors",
-        "items": []
-    }
+    "message": "Error",
+    "results": [
+        "The is active field is required."
+    ]
 }
 ```
 
