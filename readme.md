@@ -64,24 +64,26 @@ curl --request GET -url http://local.kampus.com/api/v1/berita
     "message": "Success",
     "results": [
         {
-            "judul_berita": "Wow Mahasiswa LPKIA Mendapatkan Juara Olimpiade Teknologi",
-            "tipe_berita": "pendidikan",
-            "isi_berita": "Wow mahasiswa LPKIA mendapatkan juara olimpiade teknologi pada hari kamis 09 September 2019 yang diselengarakan oleh...",
-            "image_url": "http://local.laravel.com/storage/images/kampus/lpkia.png",
-            "post_date": "2019-06-04T07:00:00+07:00",
-            "is_active": true,
-            "created_at": "2019-05-04T13:31:20+07:00",
-            "updated_at": "2019-05-04T13:31:20+07:00"
-        },
-        {
+            "id": 2,
             "judul_berita": "Rossi Menang di Assen Belanda",
             "tipe_berita": "news",
             "isi_berita": "Rossi Menang di Assen Belanda yang berujung pada naiknya peringkat kelasemen",
-            "image_url": "http://local.laravel.com/storage/",
+            "image_url": "http://local.kampus.com/storage/images/berita/962RO7svjFanFdxghwAwn4DalSTIvMrfLqdAFPzs.jpeg",
+            "post_date": "2019-06-12T07:00:00+07:00",
+            "is_active": true,
+            "created_at": "2019-06-13T01:19:56+07:00",
+            "updated_at": "2019-06-13T01:19:56+07:00"
+        },
+        {
+            "id": 1,
+            "judul_berita": "Wow Mahasiswa LPKIA Mendapatkan Juara Olimpiade Teknologi",
+            "tipe_berita": "pendidikan",
+            "isi_berita": "Wow mahasiswa LPKIA mendapatkan juara olimpiade teknologi pada hari kamis 09 September 2019 yang diselengarakan oleh...\r\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+            "image_url": "http://local.kampus.com/storage/images/kampus/lpkia.png",
             "post_date": "2019-06-04T07:00:00+07:00",
             "is_active": true,
-            "created_at": "2019-06-04T19:41:33+07:00",
-            "updated_at": "2019-06-04T19:41:33+07:00"
+            "created_at": "2019-06-04T19:28:50+07:00",
+            "updated_at": "2019-06-04T19:28:50+07:00"
         }
     ]
 }
