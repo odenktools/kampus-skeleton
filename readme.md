@@ -326,7 +326,7 @@ php artisan event:generate
 
 #### Benchmarking
 
-```
+```bash
 curl --request GET --url http://local.kampus.com/api/v1/berita --header 'Accept: application/json' --header 'Authorization: Bearer Ctbm2oNWbhPbfmpW60yjbcvEmwXrJr4H'
 ```
 
