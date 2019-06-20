@@ -125,9 +125,9 @@ class KampusController extends Controller
         $validator = Validator::make($request->all(), [
             'nama_kampus' => 'required|unique:kampus|max:255',
             'no_telephone' => 'required|unique:kampus|max:150',
-            'nama_admin' => 'required|unique:users,name,NULL,kampus_id|max:150',
-            'handphone_admin' => 'required|phone:ID,mobile|unique:users,phone,NULL,kampus_id|max:15',
-            'email_admin' => 'required|max:255|email_trust|unique:users,email,kampus_id',
+            'nama_admin' => 'required|unique:users,name|max:150',
+            'handphone_admin' => 'required|phone:ID,mobile|unique:users,phone|max:15',
+            'email_admin' => 'required|max:255|email_trust|unique:users,email',
             'kota' => 'required|max:255',
             'alamat' => 'required',
             'deskripsi' => 'required|string|max:255'
@@ -148,6 +148,7 @@ class KampusController extends Controller
 
             $apikey = \App\Libraries\StringHelpers::random();
             $user = new User();
+
             $user->kampus_id = $vKampus->id;
             $user->name = $request->nama_admin;
             $user->email = $request->email_admin;
@@ -157,6 +158,7 @@ class KampusController extends Controller
             $user->api_token = $apikey;
             $user->avatar = null;
             $user->save();
+
 
             $user->user_role()->attach(['role_id' => 1]);
 

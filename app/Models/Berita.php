@@ -46,7 +46,9 @@ class Berita extends Model
      * @var array
      */
     protected $appends = [
-        'post_date'
+        'post_date',
+        'created_at',
+        'updated_at'
     ];
 
     /**
@@ -87,7 +89,9 @@ class Berita extends Model
                 'isi_berita',
                 'images.image_url',
                 'post_date',
-                'is_active'
+                'is_active',
+                'berita.created_at',
+                'berita.updated_at'
             );
     }
 
@@ -99,6 +103,30 @@ class Berita extends Model
     public function getPostDateAttribute()
     {
         $date = new \Carbon\Carbon($this->attributes['post_date']);
+        $date->setTimezone('Asia/Jakarta');
+        return $date->toIso8601String();
+    }
+
+    /**
+     * Convert PostDate to ISO8601.
+     *
+     * @return string
+     */
+    public function getCreatedAtAttribute()
+    {
+        $date = new \Carbon\Carbon($this->attributes['created_at']);
+        $date->setTimezone('Asia/Jakarta');
+        return $date->toIso8601String();
+    }
+
+    /**
+     * Convert PostDate to ISO8601.
+     *
+     * @return string
+     */
+    public function getUpdatedAtAttribute()
+    {
+        $date = new \Carbon\Carbon($this->attributes['updated_at']);
         $date->setTimezone('Asia/Jakarta');
         return $date->toIso8601String();
     }
