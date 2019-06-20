@@ -241,6 +241,16 @@ php artisan ide-helper:meta
 php artisan event:generate
 ```
 
+#### Benchmarking
+
+```
+curl --request GET --url http://local.kampus.com/api/v1/berita --header 'Accept: application/json' --header 'Authorization: Bearer Ctbm2oNWbhPbfmpW60yjbcvEmwXrJr4H'
+```
+
+```bash
+ab -k -c 10 -n 100 -T application/json -H "Authorization: Bearer Ctbm2oNWbhPbfmpW60yjbcvEmwXrJr4H" http://local.kampus.com/api/v1/berita
+```
+
 # LICENSE
 
 MIT License

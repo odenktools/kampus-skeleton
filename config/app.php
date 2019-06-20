@@ -181,6 +181,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         App\Providers\KampusServiceProvider::class,
+        App\Providers\ThrottleServiceProvider::class,
     ],
 
     /*

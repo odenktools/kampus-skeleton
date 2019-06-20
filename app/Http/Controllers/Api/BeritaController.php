@@ -38,7 +38,6 @@ class BeritaController extends Controller
     {
         $this->model = new Berita();
         $this->imageModel = new Image();
-        $this->responseLib = new ResponseLibrary();
     }
 
     /**
@@ -50,15 +49,18 @@ class BeritaController extends Controller
     public function getIndex(Request $request)
     {
         try {
+            $arrayLog = array('IP' => $request->getClientIp());
+            \Illuminate\Support\Facades\Log::info('REQUEST_DATA_BERITA' . json_encode($arrayLog));
             $judul_berita = strtolower($request->input('judul_berita'));
             $tipe_berita = strtolower($request->input('tipe_berita'));
             $limit = $request->input('limit') ? $request->input('limit') : 10;
-            $sortBy = $request->input('sort') ? $request->input('sort') : 'berita.post_date';
+            $sortBy = $request->input('sort') ? $request->input('sort') : 'berita.created_at';
             $orderBy = $request->input('order') ? $request->input('order') : 'DESC';
             $conditions = '1 = 1';
             if ($limit >= 20) {
                 $limit = 10;
             }
+            $conditions .= " AND is_active=1";
             if (!empty($judul_berita)) {
                 $conditions .= " AND judul_berita LIKE '%$judul_berita%'";
             }
@@ -77,17 +79,19 @@ class BeritaController extends Controller
                     $berita[$idx]['image_url'] = env('APP_URL') . Storage::url($berita[$idx]['image_url']);
                 }
             }
-            return response()->json(['results' => $berita], 200);
+            return response()->json(['message'=>"Success", 'results' => $berita], 200);
         } catch (QueryException $e) {
             $code = $e->getCode();
             $message = $e->getMessage();
             $errors = array("Error kode $code", $message);
-            return response(ResponseLibrary::fail($errors, "GET"), 400);
+            \Illuminate\Support\Facades\Log::info('ERROR_REQUEST_DATA_BERITA' . json_encode($errors));
+            return response()->json(['message' => "Error", 'results' => $errors], 400);
         } catch (\Exception $e) {
             $code = $e->getCode();
             $message = $e->getMessage();
             $errors = array("Error kode $code", $message);
-            return response(ResponseLibrary::fail($errors, "GET"), 400);
+            \Illuminate\Support\Facades\Log::info('ERROR_REQUEST_DATA_BERITA' . json_encode($errors));
+            return response()->json(['message' => "Error", 'results' => $errors], 400);
         }
     }
 
@@ -108,7 +112,7 @@ class BeritaController extends Controller
             'is_active' => 'required|boolean|between:0,1'
         ]);
         if ($validator->fails()) {
-            return response(ResponseLibrary::validation($validator->errors()->all(), "POST"), 422);
+            return response()->json(['message' => "Error", 'results' => $validator->errors()->all()], 400);
         }
         DB::beginTransaction();
         try {
@@ -117,6 +121,9 @@ class BeritaController extends Controller
             $model->tipe_berita = $request->input('tipe_berita');
             $model->is_active = $request->input('is_active');
             $model->isi_berita = $request->input('isi_berita');
+            if (!$request->hasFile('thumbnail')) {
+                $model->thumbnail = 0;
+            }
             foreach ($request->file() as $key => $file) {
                 if ($request->hasFile($key)) {
                     if ($request->file($key)->isValid()) {
@@ -136,17 +143,16 @@ class BeritaController extends Controller
             $code = $e->getCode();
             $message = $e->getMessage();
             $errors = array("Error kode $code", $message);
-            return response()->json(ResponseLibrary::fail($errors, "POST"), 400);
+            return response()->json(['message' => "Error", 'results' => $errors], 400);
         } catch (\Exception $e) {
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
             $errors = array("Error kode $code", $message);
-            return response()->json(ResponseLibrary::fail($errors, "POST"), 400);
+            return response()->json(['message' => "Error", 'results' => $errors], 400);
         }
         DB::commit();
-
-        return response()->json(ResponseLibrary::ok($model, 'Success'), 200);
+        return response()->json(['message' => "Success", 'results' => [$model]], 200);
     }
 
     /**
@@ -166,10 +172,14 @@ class BeritaController extends Controller
             'is_active' => 'required|boolean|between:0,1'
         ]);
         if ($validator->fails()) {
-            return response(ResponseLibrary::validation($validator->errors()->all(), "POST"), 422);
+            return response()->json(['message' => "Error", 'results' => $validator->errors()->all()], 400);
         }
         DB::beginTransaction();
         try {
+          if($id === "1" || $id === "2"){
+              DB::rollback();
+              return response()->json(['message' => "Error", 'results' => array('maaf, data default tidak bisa diupdate')], 400);
+          }
             $model = $this->model->findOrFail($id);
             $model->judul_berita = $request->input('judul_berita');
             $model->tipe_berita = $request->input('tipe_berita');
@@ -193,16 +203,49 @@ class BeritaController extends Controller
             $code = $e->getCode();
             $message = $e->getMessage();
             $errors = array("Error kode $code", $message);
-            return response()->json(ResponseLibrary::fail($errors, "POST"), 400);
+            return response()->json(['message' => "Error", 'results' => $errors], 400);
         } catch (\Exception $e) {
             DB::rollback();
             $code = $e->getCode();
             $message = $e->getMessage();
             $errors = array("Error kode $code", $message);
-            return response()->json(ResponseLibrary::fail($errors, "POST"), 400);
+            return response()->json(['message' => "Error", 'results' => $errors], 400);
         }
         DB::commit();
+        return response()->json(['message' => "Success", 'results' => [$model]], 200);
+    }
 
-        return response()->json(ResponseLibrary::ok(array($model), 'Success'), 200);
+    /**
+     * Hapus data.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @throws \Exception
+     */
+    public function postDelete($id)
+    {
+        DB::beginTransaction();
+        try {
+          if($id === "1" || $id === "2"){
+              DB::rollback();
+              return response()->json(['message' => "Error", 'results' => array('maaf, data default tidak bisa dihapus')], 400);
+          }
+          $model = $this->model->findOrFail($id);
+          $model->delete();
+        } catch (QueryException $e) {
+            DB::rollback();
+            $code = $e->getCode();
+            $message = $e->getMessage();
+            $errors = array("Error kode $code", $message);
+            return response()->json(['message' => "Error", 'results' => $errors], 400);
+        } catch (\Exception $e) {
+            DB::rollback();
+            $code = $e->getCode();
+            $message = $e->getMessage();
+            $errors = array("Error kode $code", $message);
+            return response()->json(['message' => "Error", 'results' => $errors], 400);
+        }
+        DB::commit();
+        return response()->json(['message' => "Success", 'results' => [$model]], 200);
     }
 }

@@ -81,6 +81,7 @@ class Berita extends Model
         return $this
             ->leftJoin('images', 'images.id', '=', 'berita.thumbnail')
             ->select(
+                'berita.id',
                 'judul_berita',
                 'tipe_berita',
                 'isi_berita',
