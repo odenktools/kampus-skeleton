@@ -53,6 +53,8 @@ php artisan migrate --seed
 
 Rubah **http://local.kampus.com** dengan domain / IP milik Anda.
 
+## Modul Berita
+
 **List Berita**
 
 ```bash
@@ -178,6 +180,8 @@ curl --request POST \
     ]
 }
 ```
+
+## Modul Kampus
 
 **Registrasi Kampus**
 
