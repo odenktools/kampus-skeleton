@@ -48,8 +48,8 @@ class Handler extends ExceptionHandler
         $response = [
             'meta' => [
                 'code' => 400,
-                'api_version' => \App\Libraries\ResponseLibrary::$apiVersion,
-                'message' => trans('message.api.error.global'),
+                'api_version' => '1.0',
+                'message' => 'Error',
                 'method' => $request->server('REQUEST_METHOD'),
             ],
             'errors' => [$exception->getMessage()],
@@ -84,8 +84,10 @@ class Handler extends ExceptionHandler
         } else if ($request->wantsJson() && $exception instanceof \Illuminate\Session\TokenMismatchException) {
             $response['meta']['code'] = Response::HTTP_UNAUTHORIZED;
             return response()->json($response, Response::HTTP_UNAUTHORIZED);
+        } else if ($request->wantsJson() && $exception instanceof \Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException) {
+            $response['meta']['code'] = Response::HTTP_UNAUTHORIZED;
+            return response()->json($response, Response::HTTP_UNAUTHORIZED);
         }
-
         if ($request->wantsJson() && !($exception instanceof \Illuminate\Validation\ValidationException)) {
             $response['meta']['code'] = 400;
             return response()->json($response, 400);

@@ -6,7 +6,7 @@ Dipergunakan untuk Sample Rest API.
 
 - [x] PHP 5.6 dan Laravel framework 5.4.x
 - [x] Menggunakan tanggal ISO8601
-- [x] [Mengikuti Google JSON Style Guide](https://google.github.io/styleguide/jsoncstyleguide.xml)
+- [x] [Mengikuti Google JSON Style Guide](https://google.github.io/styleguide/jsoncstyleguide.xml) (Modul Kampus)
 - [x] MySQL dan PostgreSQL support
 - [x] Sample Image processing
 - [x] Sample penggunaan database (migration, one to many, many to one, many to many)
@@ -53,6 +53,8 @@ php artisan migrate --seed
 
 Rubah **http://local.kampus.com** dengan domain / IP milik Anda.
 
+## Modul Berita
+
 **List Berita**
 
 ```bash
@@ -61,26 +63,29 @@ curl --request GET -url http://local.kampus.com/api/v1/berita
 
 ```json
 {
+    "message": "Success",
     "results": [
         {
-            "judul_berita": "Wow Mahasiswa LPKIA Mendapatkan Juara Olimpiade Teknologi",
-            "tipe_berita": "pendidikan",
-            "isi_berita": "Wow mahasiswa LPKIA mendapatkan juara olimpiade teknologi pada hari kamis 09 September 2019 yang diselengarakan oleh...",
-            "image_url": "http://local.laravel.com/storage/images/kampus/lpkia.png",
-            "post_date": "2019-06-04T07:00:00+07:00",
-            "is_active": true,
-            "created_at": "2019-05-04T13:31:20+07:00",
-            "updated_at": "2019-05-04T13:31:20+07:00"
-        },
-        {
+            "id": 2,
             "judul_berita": "Rossi Menang di Assen Belanda",
             "tipe_berita": "news",
             "isi_berita": "Rossi Menang di Assen Belanda yang berujung pada naiknya peringkat kelasemen",
-            "image_url": "http://local.laravel.com/storage/",
+            "image_url": "http://local.kampus.com/storage/images/berita/962RO7svjFanFdxghwAwn4DalSTIvMrfLqdAFPzs.jpeg",
+            "post_date": "2019-06-12T07:00:00+07:00",
+            "is_active": true,
+            "created_at": "2019-06-13T01:19:56+07:00",
+            "updated_at": "2019-06-13T01:19:56+07:00"
+        },
+        {
+            "id": 1,
+            "judul_berita": "Wow Mahasiswa LPKIA Mendapatkan Juara Olimpiade Teknologi",
+            "tipe_berita": "pendidikan",
+            "isi_berita": "Wow mahasiswa LPKIA mendapatkan juara olimpiade teknologi pada hari kamis 09 September 2019 yang diselengarakan oleh...\r\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+            "image_url": "http://local.kampus.com/storage/images/kampus/lpkia.png",
             "post_date": "2019-06-04T07:00:00+07:00",
             "is_active": true,
-            "created_at": "2019-06-04T19:41:33+07:00",
-            "updated_at": "2019-06-04T19:41:33+07:00"
+            "created_at": "2019-06-04T19:28:50+07:00",
+            "updated_at": "2019-06-04T19:28:50+07:00"
         }
     ]
 }
@@ -104,30 +109,19 @@ curl --request POST \
 
 ```json
 {
-    "meta": {
-        "code": 200,
-        "api_version": "1.0",
-        "method": "POST",
-        "message": "Success"
-    },
-    "errors": [],
-    "pageinfo": {},
-    "data": {
-        "message": "apikey is zFiA8CBsrhijSGymnHcOa3B7J75XvChW",
-        "items": [
-            {
-                "nama_kampus": "xxx",
-                "kode_kampus": "xxx",
-                "no_telephone": "0896710110",
-                "kota": "bandung",
-                "alamat": "alamat",
-                "deskripsi": "deskripsi",
-                "created_at": "2019-06-04T18:41:40+07:00",
-                "updated_at": "2019-06-04T18:41:40+07:00",
-                "id": 1
-            }
-        ]
-    }
+    "message": "Success",
+    "results": [
+        {
+            "judul_berita": "Rossi Menang di Assen Belanda2",
+            "tipe_berita": "news",
+            "is_active": true,
+            "isi_berita": "Rossi Menang di Assen Belanda yang beruj2ung pada naiknya peringkat kelasemen",
+            "post_date": "2019-06-20T07:00:00+07:00",
+            "updated_at": "2019-06-20T23:02:39+07:00",
+            "created_at": "2019-06-20T23:02:39+07:00",
+            "id": 12
+        }
+    ]
 }
 ```
 
@@ -135,22 +129,10 @@ curl --request POST \
 
 ```json
 {
-    "meta": {
-        "code": 422,
-        "api_version": "1.0",
-        "method": "POST",
-        "message": "Validation error.",
-        "errors": [
-            "The nama kampus has already been taken.",
-            "The nama admin has already been taken.",
-            "The handphone admin has already been taken.",
-            "The email admin has already been taken."
-        ]
-    },
-    "data": {
-        "message": "errors",
-        "items": []
-    }
+    "message": "Error",
+    "results": [
+        "The judul berita has already been taken."
+    ]
 }
 ```
 
@@ -172,29 +154,19 @@ curl --request POST \
 
 ```json
 {
-    "meta": {
-        "code": 200,
-        "api_version": "1.0",
-        "method": "POST",
-        "message": "Operation successfully executed."
-    },
-    "errors": [],
-    "pageinfo": {},
-    "data": {
-        "message": "Success",
-        "items": [
-            {
-                "judul_berita": "Rossi Menang di Assen Belanda",
-                "tipe_berita": "news",
-                "is_active": true,
-                "isi_berita": "Rossi Menang di Assen Belanda yang berujung pada naiknya peringkat kelasemen",
-                "post_date": "2019-06-04T07:00:00+07:00",
-                "updated_at": "2019-06-04T07:00:00+07:00",
-                "created_at": "2019-06-04T07:00:00+07:00",
-                "id": 2
-            }
-        ]
-    }
+    "message": "Success",
+    "results": [
+        {
+            "id": 12,
+            "judul_berita": "Rossi Menang di Assen Belanda3",
+            "tipe_berita": "news",
+            "isi_berita": "Rossi Menang di Assen Belanda yang berujung pada naiknya peringkat kelasemen",
+            "post_date": "2019-06-20T07:00:00+07:00",
+            "is_active": true,
+            "created_at": "2019-06-20T23:02:39+07:00",
+            "updated_at": "2019-06-20T23:05:26+07:00"
+        }
+    ]
 }
 ```
 
@@ -202,21 +174,14 @@ curl --request POST \
 
 ```json
 {
-    "meta": {
-        "code": 422,
-        "api_version": "1.0",
-        "method": "POST",
-        "message": "Validation error.",
-        "errors": [
-            "The is active field is required."
-        ]
-    },
-    "data": {
-        "message": "errors",
-        "items": []
-    }
+    "message": "Error",
+    "results": [
+        "The is active field is required."
+    ]
 }
 ```
+
+## Modul Kampus
 
 **Registrasi Kampus**
 
@@ -322,6 +287,16 @@ php artisan ide-helper:meta
 
 ```bash
 php artisan event:generate
+```
+
+#### Benchmarking
+
+```bash
+curl --request GET --url http://local.kampus.com/api/v1/berita --header 'Accept: application/json' --header 'Authorization: Bearer Ctbm2oNWbhPbfmpW60yjbcvEmwXrJr4H'
+```
+
+```bash
+ab -k -c 10 -n 100 -T application/json -H "Authorization: Bearer Ctbm2oNWbhPbfmpW60yjbcvEmwXrJr4H" http://local.kampus.com/api/v1/berita
 ```
 
 # LICENSE
