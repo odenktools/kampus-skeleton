@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class ResponseLibrary
 {
-    public static $apiVersion = "1.0";
+    public static $apiVersion = "1.0.1";
 
     /**
      * @param array $items
@@ -29,10 +29,10 @@ class ResponseLibrary
         $return['meta']['api_version'] = self::$apiVersion;
         $return['meta']['method'] = $method;
         $return['meta']['message'] = trans('message.api.success');
-        $return['errors'] = array();
         $return['pageinfo'] = (object)[];
+        $return['errors'] = array();
         $return['data']['message'] = $messages;
-
+        $return['data']['item'] = (object)[];
         if ($items instanceof \Illuminate\Database\Eloquent\Model) {
             $return['data']['items'] = array(new \Illuminate\Database\Eloquent\Collection($items));
         } else if (is_array($items)) {
@@ -40,6 +40,29 @@ class ResponseLibrary
         } else {
             $return['data']['items'] = array($items);
         }
+        return $return;
+    }
+
+    /**
+     * @param array $items
+     * @param string $messages
+     * @param string $method
+     * @return array
+     */
+    public static function okSingle($item, $messages, $method = 'POST')
+    {
+        $return = [];
+        $return['meta']['code'] = JsonResponse::HTTP_OK;
+        $return['meta']['api_version'] = self::$apiVersion;
+        $return['meta']['method'] = $method;
+        $return['meta']['message'] = trans('message.api.success');
+        //$return['pageinfo'] = (object)[];
+        $return['pageinfo'] = self::emptyPageInfo();
+        $return['errors'] = array();
+        $return['data']['message'] = $messages;
+        $return['data']['item'] = $item;
+        $return['data']['items'] = array();
+
         return $return;
     }
 
@@ -59,19 +82,36 @@ class ResponseLibrary
         $return['meta']['api_version'] = self::$apiVersion;
         $return['meta']['method'] = 'GET';
         $return['meta']['message'] = trans('message.api.success');
-        $return['errors'] = array();
         if (is_array($pageInfo)) {
             $return['pageinfo'] = $pageInfo;
         } else if ($pageInfo === null) {
-            $return['pageinfo'] = (object)[];
+            $return['pageinfo'] = self::emptyPageInfo();
         }
+        $return['errors'] = array();
         $return['data']['message'] = 'Success';
+        $return['data']['item'] = (object)[];
         if (is_array($items)) {
             $return['data']['items'] = $items;
         } else {
             $return['data']['items'] = array($items);
         }
         return $return;
+    }
+
+    private static function emptyPageInfo()
+    {
+        $pageInfo = (object) [
+            "total" => null,
+            "per_page" => null,
+            "current_page" => null,
+            "last_page" => null,
+            "next_page_url" => null,
+            "prev_page_url" => null,
+            "from" => null,
+            "to" => null
+        ];
+
+        return $pageInfo;
     }
 
     /**
@@ -87,6 +127,7 @@ class ResponseLibrary
         $return['meta']['api_version'] = self::$apiVersion;
         $return['meta']['method'] = $method;
         $return['meta']['message'] = trans('message.api.error.global');
+        $return['pageinfo'] = self::emptyPageInfo();
         if (is_array($errors)) {
             $return['meta']['errors'] = $errors;
         } else {
@@ -94,6 +135,7 @@ class ResponseLibrary
         }
         $return['data']['message'] = 'errors';
         $return['data']['items'] = array();
+        $return['data']['item'] = (object)[];
 
         return $return;
     }
@@ -110,13 +152,16 @@ class ResponseLibrary
         $return['meta']['api_version'] = self::$apiVersion;
         $return['meta']['method'] = $method;
         $return['meta']['message'] = trans('message.api.error.validation');
+        $return['pageinfo'] = self::emptyPageInfo();
+        $return['errors'] = array();
         if (is_array($errors)) {
-            $return['meta']['errors'] = $errors;
+            $return['errors'] = $errors;
         } else {
-            $return['meta']['errors'] = array($errors);
+            $return['errors'] = array($errors);
         }
         $return['data']['message'] = 'errors';
         $return['data']['items'] = array();
+        $return['data']['item'] = (object)[];
 
         return $return;
     }

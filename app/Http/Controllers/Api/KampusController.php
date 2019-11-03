@@ -194,6 +194,22 @@ class KampusController extends Controller
         return response()->json(ResponseLibrary::ok($vKampus, "your apikey is $apikey"), 200);
     }
 
+     /**
+     * Insert data.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @throws \Exception
+     */
+    public function getDetail($id)
+    {
+        $data = Kampus::find($id);
+        if (!$data) {
+            return response(ResponseLibrary::fail(array('Data not found'), "GET"), 400);
+        }
+        return response()->json(ResponseLibrary::okSingle($data, "success", 'GET'), 200);
+    }
+
     /**
      * Update data.
      *

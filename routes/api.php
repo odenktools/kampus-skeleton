@@ -32,6 +32,9 @@ Route::group(['as' => 'api::', 'namespace' => 'Api', 'prefix' => 'v1'], function
     Route::delete('kampus/{id}', ['as' => 'kampus.update', 'uses' => 'KampusController@deleteHapus'])
         ->middleware( 'auth:api')
         ->where('id', '[0-9]+');
+    Route::get('kampus/detail/{id}', ['as' => 'kampus.get', 'uses' => 'KampusController@getDetail'])
+        ->middleware('auth:api')
+        ->where('id', '[0-9]+');
 
     // Berita Routes, digunakan untuk response yang sangat simple, dan simple crud
     Route::get('berita', ['as' => 'berita.index', 'uses' => 'BeritaController@getIndex'])->middleware('auth:api');

@@ -120,6 +120,7 @@ class BeritaController extends Controller
             $model->judul_berita = $request->input('judul_berita');
             $model->tipe_berita = $request->input('tipe_berita');
             $model->is_active = $request->input('is_active');
+            $model->post_date = \Carbon\Carbon::now()->format('Y-m-d H:i:s');
             $model->isi_berita = $request->input('isi_berita');
             if (!$request->hasFile('thumbnail')) {
                 $model->thumbnail = 0;
