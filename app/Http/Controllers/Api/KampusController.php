@@ -13,6 +13,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Propaganistas\LaravelPhone\PhoneNumber;
 
 /**
  * Kampus Controller API.
@@ -140,7 +141,8 @@ class KampusController extends Controller
             $vKampus = $this->model;
             $vKampus->nama_kampus = $request->input('nama_kampus');
             $vKampus->kode_kampus = Str::slug($request->input('nama_kampus'));
-            $vKampus->no_telephone = $request->input('handphone_admin');
+            $phone = (string)PhoneNumber::make($request->input('handphone_admin'), 'ID')->formatE164();
+            $vKampus->no_telephone = $phone;
             $vKampus->kota = $request->input('kota');
             $vKampus->alamat = $request->input('alamat');
             $vKampus->deskripsi = $request->input('deskripsi');
