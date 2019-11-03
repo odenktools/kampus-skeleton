@@ -85,20 +85,12 @@ class KampusController extends Controller
             $paging = array();
             if (!empty($select)) {
                 $paginate = $select->paginate($limit);
-                $paging['total'] = $paginate->total();
-                $paging['per_page'] = $paginate->perPage();
-                $paging['current_page'] = $paginate->currentPage();
-                $paging['last_page'] = $paginate->lastPage();
-                $paging['next_page_url'] = $paginate->nextPageUrl();
-                $paging['prev_page_url'] = $paginate->previousPageUrl();
-                $paging['from'] = $paginate->firstItem();
-                $paging['to'] = $paginate->lastItem();
                 $kampusList = array();
                 foreach ($select->get() as $idx => $dt) {
                     $kampusList[$idx] = $dt;
                     $kampusList[$idx]['image_url'] = env('APP_URL') . Storage::url($kampusList[$idx]['image_url']);
                 }
-                return response()->json(ResponseLibrary::paginate($kampusList, $paging), 200);
+                return response()->json(ResponseLibrary::paginate($kampusList, $paginate), 200);
             }
         } catch (QueryException $e) {
             $code = $e->getCode();

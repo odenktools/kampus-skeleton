@@ -3,6 +3,7 @@
 namespace App\Libraries;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Illuminate\Contracts\Pagination\Paginator;
 
 /**
  * ResponseLibrary untuk mempermudah response API.
@@ -75,29 +76,41 @@ class ResponseLibrary
      * @param int $code
      * @return array
      */
-    public static function paginate(array $items, array $pageInfo, $code = 200)
+    public static function paginate($items, Paginator $paged, $code = 200)
     {
         $return = [];
         $return['meta']['code'] = $code;
         $return['meta']['api_version'] = self::$apiVersion;
         $return['meta']['method'] = 'GET';
         $return['meta']['message'] = trans('message.api.success');
-        if (is_array($pageInfo)) {
-            $return['pageinfo'] = $pageInfo;
-        } else if ($pageInfo === null) {
-            $return['pageinfo'] = self::emptyPageInfo();
-        }
+        $return['pageinfo'] = (object) [
+            "total" => null,
+            "per_page" => $paged->perPage(),
+            "current_page" => $paged->currentPage(),
+            "last_page" => $paged->lastPage(),
+            "next_page_url" => $paged->nextPageUrl(),
+            "prev_page_url" => $paged->previousPageUrl(),
+            "from" => $paged->firstItem(),
+            "to" => $paged->lastItem()
+        ];
         $return['errors'] = array();
         $return['data']['message'] = 'Success';
         $return['data']['item'] = (object)[];
         if (is_array($items)) {
             $return['data']['items'] = $items;
+        } else if (is_object($items)) {
+            $return['data']['items'] = (object)($items);
         } else {
-            $return['data']['items'] = array($items);
+            $return['data']['items'] = $items;
         }
         return $return;
     }
 
+    /**
+     * Create empty response.
+     *
+     * @return object
+     */
     private static function emptyPageInfo()
     {
         $pageInfo = (object) [
