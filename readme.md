@@ -6,12 +6,12 @@ Dipergunakan untuk Sample Rest API.
 
 - [x] PHP 5.6 dan Laravel framework 5.4.x
 - [x] Menggunakan tanggal ISO8601
-- [x] [Mengikuti Google JSON Style Guide](https://google.github.io/styleguide/jsoncstyleguide.xml) (Modul Kampus)
+- [x] [Mengikuti Google JSON Style Guide](https://google.github.io/styleguide/jsoncstyleguide.xml) (Hanya di Modul Kampus)
 - [x] MySQL dan PostgreSQL support
 - [x] Sample Image processing
 - [x] Sample penggunaan database (migration, one to many, many to one, many to many)
 - [x] Sample response CRUD REST API yang simple (Modul Berita)
-- [x] Sample response CRUD REST API yang advanced (digunakan untuk project base) (Modul Kampus)
+- [x] Sample response CRUD REST API yang advanced (digunakan untuk project base) (Hanya di Modul Kampus)
 - [x] Sample response pagination
 - [x] Sample kirim email
 - [x] Sample penggunaan **Event Driven**
