@@ -23,6 +23,12 @@ Route::group(['as' => 'auth::', 'namespace' => 'Auth'], function () {
 });
 
 Route::group(['as' => 'api::', 'namespace' => 'Api', 'prefix' => 'v1'], function () {
+
+    Route::get('/berita', ['as' => 'get', 'uses' => 'BeritaController@getIndex']);
+    Route::post('/berita/insert', ['as' => 'insert', 'uses' => 'BeritaController@postInsert']);
+    Route::post('/berita/delete/{id}', ['as' => 'delete', 'uses' => 'BeritaController@postDelete']);
+	Route::post('/berita/update/{id}', ['as' => 'delete', 'uses' => 'BeritaController@postUpdate']);
+
     // === Kampus Routes
     Route::get('kampus', ['as' => 'kampus.index', 'uses' => 'KampusController@getIndex'])
         ->middleware( 'auth:api');
@@ -32,16 +38,12 @@ Route::group(['as' => 'api::', 'namespace' => 'Api', 'prefix' => 'v1'], function
     Route::delete('kampus/{id}', ['as' => 'kampus.update', 'uses' => 'KampusController@deleteHapus'])
         ->middleware( 'auth:api')
         ->where('id', '[0-9]+');
+
     Route::get('kampus/detail/{id}', ['as' => 'kampus.get', 'uses' => 'KampusController@getDetail'])
         ->middleware('auth:api')
         ->where('id', '[0-9]+');
 
-    // Berita Routes, digunakan untuk response yang sangat simple, dan simple crud
-    Route::get('berita', ['as' => 'berita.index', 'uses' => 'BeritaController@getIndex'])->middleware('auth:api');
-    //Route::post('berita/insert', ['as' => 'berita.insert', 'uses' => 'BeritaController@postInsert'])->middleware('auth:api', 'App\Http\Middleware\ThrottleMiddleware:5,5');
-    Route::post('berita/insert', ['as' => 'berita.insert', 'uses' => 'BeritaController@postInsert'])->middleware('auth:api');
-    //Route::post('berita/update/{id}', ['as' => 'berita.update', 'uses' => 'BeritaController@postUpdate'])->middleware('auth:api', 'App\Http\Middleware\ThrottleMiddleware:5,5')->where('id', '[0-9]+');
-    Route::post('berita/update/{id}', ['as' => 'berita.update', 'uses' => 'BeritaController@postUpdate'])->middleware('auth:api')->where('id', '[0-9]+');
-    //Route::post('berita/delete/{id}', ['as' => 'berita.delete', 'uses' => 'BeritaController@postDelete'])->middleware('auth:api', 'App\Http\Middleware\ThrottleMiddleware:5,5')->where('id', '[0-9]+');
-    Route::post('berita/delete/{id}', ['as' => 'berita.delete', 'uses' => 'BeritaController@postDelete'])->middleware('auth:api')->where('id', '[0-9]+');
+    Route::get('karyawan', ['as' => 'karyawan.index', 'uses' => 'KaryawanController@getIndex']);
+    Route::post('karyawan/insert', ['as' => 'karyawan.store', 'uses' => 'KaryawanController@postCreateData']);
+    Route::delete('karyawan/id/{id}', ['as' => 'karyawan.delete', 'uses' => 'KaryawanController@deleteHapus']);
 });

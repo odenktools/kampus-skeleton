@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Libraries\ResponseLibrary;
@@ -76,11 +76,7 @@ class BeritaController extends Controller
             if (!empty($select)) {
                 foreach ($select->get() as $idx => $dt) {
                     $berita[$idx] = $dt;
-					if($berita[$idx]['image_url']){
-						$berita[$idx]['image_url'] = env('APP_URL') . Storage::url($berita[$idx]['image_url']);
-					}else{
-						$berita[$idx]['image_url'] = '';
-					}
+                    $berita[$idx]['image_url'] = env('APP_URL') . Storage::url($berita[$idx]['image_url']);
                 }
             }
             return response()->json(['message'=>"Success", 'results' => $berita], 200);
@@ -236,8 +232,6 @@ class BeritaController extends Controller
               return response()->json(['message' => "Error", 'results' => array('maaf, data default tidak bisa dihapus')], 400);
           }
           $model = $this->model->findOrFail($id);
-		  $image = \App\Models\Image::findOrFail($model->thumbnail);
-		  Storage::disk()->delete($image->image_url);
           $model->delete();
         } catch (QueryException $e) {
             DB::rollback();
